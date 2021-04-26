@@ -1,25 +1,20 @@
 package pl.bzieja.pandemicmodel.Model;
 
-import javafx.stage.FileChooser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.Model.Cell.Background;
 import pl.bzieja.pandemicmodel.Model.Cell.Building;
 import pl.bzieja.pandemicmodel.Model.Cell.Cell;
 import pl.bzieja.pandemicmodel.Model.Cell.Path;
-import pl.bzieja.pandemicmodel.Presenter.Presenter;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
 
 @Component
 public class Model {
+
     private Cell[][] map;
 
     public void createModelFromImage() {
@@ -51,6 +46,8 @@ public class Model {
             e.printStackTrace();
         }
     }
+
+
 
     public Cell[][] getMap() {
         return map;

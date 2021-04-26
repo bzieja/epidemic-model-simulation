@@ -11,7 +11,9 @@
       <Button fx:id="leftButton" layoutX="44.0" layoutY="360.0" mnemonicParsing="false" onAction="#moveLeft" prefHeight="25.0" prefWidth="52.0" text="Left" />
       <Button fx:id="rightButton" layoutX="148.0" layoutY="360.0" mnemonicParsing="false" onAction="#moveRight" prefHeight="25.0" prefWidth="52.0" text="Right" />
       <Button fx:id="downButton" layoutX="96.0" layoutY="394.0" mnemonicParsing="false" onAction="#moveDown" prefHeight="25.0" prefWidth="52.0" text="Down" />
-      <Button fx:id="zoomInButton" layoutX="232.0" layoutY="360.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="25.0" prefWidth="87.0" text="Zoom in \ +" />
-      <Button fx:id="zoomOutButton" layoutX="232.0" layoutY="394.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="25.0" prefWidth="87.0" text="Zoom out \ -" />
+      <Button fx:id="zoomInButton" layoutX="216.0" layoutY="348.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="25.0" prefWidth="87.0" text="Zoom in \ +" />
+      <Button fx:id="zoomOutButton" layoutX="216.0" layoutY="382.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="25.0" prefWidth="87.0" text="Zoom out \ -" />
+      <Button fx:id="startButton" layoutX="333.0" layoutY="325.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="25.0" prefWidth="52.0" text="Start" />
+      <Button fx:id="stopButton" layoutX="333.0" layoutY="361.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="25.0" prefWidth="52.0" text="Stop" />
    </children>
 </AnchorPane>

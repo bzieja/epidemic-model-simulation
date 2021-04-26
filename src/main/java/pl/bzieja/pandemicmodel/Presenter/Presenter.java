@@ -76,4 +76,11 @@ public class Presenter implements Initializable {
     public Canvas getCanvasID() {
         return canvasID;
     }
+
+    public void startSimulation(ActionEvent actionEvent) {
+    }
+
+
+    public void stopSimulation(ActionEvent actionEvent) {
+    }
 }

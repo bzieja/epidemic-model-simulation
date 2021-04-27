@@ -1,18 +1,17 @@
-package pl.bzieja.pandemicmodel.View;
+package pl.bzieja.pandemicmodel.view;
 
-import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.bzieja.pandemicmodel.Model.Model;
+import pl.bzieja.pandemicmodel.model.Model;
 
 import java.awt.*;
 
 @Component
 public class View {
     Model model;
-    private int scaleFactor;
+    private int scaleFactor;    //to do change scaleFactor to Double
     private int xOfTheFirstCellToGenerate;
     private int yOfTheFirstCellToGenerate;
 
@@ -33,18 +32,18 @@ public class View {
 
         GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
 
-        for (int i = 0; i < cellsToGenerateAtY && i < model.getMap().length; i++) {
-            if (i + yOfTheFirstCellToGenerate >= model.getMap().length) {
+        for (int i = 0; i < cellsToGenerateAtY && i < model.getMapVerticalDimension(); i++) {
+            if (i + yOfTheFirstCellToGenerate >= model.getMapVerticalDimension()) {
                 continue;
             }
 
-            for (int j = 0; j < cellsToGenerateAtX && j < model.getMap()[0].length; j++) {
-                if( j + xOfTheFirstCellToGenerate >= model.getMap()[0].length) {
+            for (int j = 0; j < cellsToGenerateAtX && j < model.getMapHorizontalDimension(); j++) {
+                if( j + xOfTheFirstCellToGenerate >= model.getMapHorizontalDimension()) {
                     continue;
                 }
 
                 graphicsContext.beginPath();
-                Color color = model.getMap()[i + yOfTheFirstCellToGenerate][j + xOfTheFirstCellToGenerate].getColor();
+                Color color = model.getCellColor(i + yOfTheFirstCellToGenerate, j + xOfTheFirstCellToGenerate);
                 int r = color.getRed();
                 int g = color.getGreen();
                 int b = color.getBlue();

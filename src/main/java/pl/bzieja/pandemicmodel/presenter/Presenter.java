@@ -1,4 +1,4 @@
-package pl.bzieja.pandemicmodel.Presenter;
+package pl.bzieja.pandemicmodel.presenter;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -7,8 +7,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.bzieja.pandemicmodel.Model.Model;
-import pl.bzieja.pandemicmodel.View.View;
+import pl.bzieja.pandemicmodel.model.Model;
+import pl.bzieja.pandemicmodel.model.ModelInitializer;
+import pl.bzieja.pandemicmodel.view.View;
 
 import javafx.scene.input.MouseEvent;
 import java.net.URL;
@@ -20,23 +21,26 @@ public class Presenter implements Initializable {
     public Canvas canvasID;
     EventHandler<MouseEvent> loadImageEvent;
     Model model;
+    ModelInitializer modelInitializer;
     View view;
 
     @Autowired
-    public Presenter(Model model, View view) {
+    public Presenter(Model model, View view, ModelInitializer modelInitializer) {
         this.model = model;
         this.view = view;
+        this.modelInitializer = modelInitializer;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         canvasID.setVisible(true);
-        model.createModelFromImage();
+        modelInitializer.createModelFromImage();
         view.generateView(canvasID);
+        System.out.println("End of initialization!");
     }
 
     public void loadImage(ActionEvent actionEvent) {
-        model.createModelFromImage();
+        modelInitializer.createModelFromImage();
     }
 
     public void moveUp(ActionEvent actionEvent) {

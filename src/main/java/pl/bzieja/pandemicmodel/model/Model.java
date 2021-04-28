@@ -1,6 +1,7 @@
 package pl.bzieja.pandemicmodel.model;
 
 import org.springframework.stereotype.Component;
+import pl.bzieja.pandemicmodel.model.cell.Building;
 import pl.bzieja.pandemicmodel.model.cell.Cell;
 
 import java.awt.Color;
@@ -16,17 +17,24 @@ import java.util.stream.Stream;
 public class Model {
 
     private Cell[][] map;
-    private int[][] routeMap;
     private List<Person> workers;
-
 
     public boolean isCellWalkable(int x, int y) {
         return map[x][y].isWalkable();
     }
 
     public Color getCellColor(int x, int y){
-        //to do: if cell stores people -> special color for "crowd"
-        return map[x][y].getColor();
+
+        //check if someone from workers is on that cell
+        long passerbyCounter = workers.stream().filter(p -> Arrays.equals(p.getCoordinates(), new int[]{x, y})).count();
+
+        if (passerbyCounter == 1) {
+            return Building.WORKER.getColor();
+        } else if (passerbyCounter > 1) {
+            return Building.CROWD.getColor();
+        } else {
+            return map[x][y].getColor();
+        }
     }
 
     public int getMapVerticalDimension() {
@@ -54,11 +62,33 @@ public class Model {
        //return Arrays.stream(map).flatMap(Stream::of).filter(e ->e.getColor().equals(color)).sorted((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2)).findAny().orElseThrow().getCoordinates();
     }
 
+    public List<Cell> getAllCellsCoordinatesByColor(Color color) {
+        List<Cell> list = new ArrayList<>();
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                if (map[i][j].getColor().equals(color)) {
+                    list.add(map[i][j]);
+                }
+            }
+        }
+        return list;
+    }
+
     public void setMap(Cell[][] map) {
         this.map = map;
     }
 
-    public void setRouteMap(int[][] routeMap) {
-        this.routeMap = routeMap;
+    public void setWorkers(List<Person> workers) {
+        this.workers = workers;
+    }
+
+    //it will be uneccessary later, just for demonstraiting main animating loop now
+
+    public boolean areAllWorkersAtTheirDestinationPoints() {
+        return workers.stream().allMatch(Person::isAtTheDestinationPoint);
+    }
+
+    public synchronized void moveWorkers() {
+        workers.forEach(Person::makeMove);
     }
 }

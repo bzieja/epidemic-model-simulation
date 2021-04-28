@@ -1,7 +1,10 @@
 package pl.bzieja.pandemicmodel.model.cell;
 
-import java.awt.*;
-import java.util.Objects;
+import pl.bzieja.pandemicmodel.model.Person;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Cell {
     protected boolean walkable;
@@ -36,4 +39,5 @@ public abstract class Cell {
     public int getY() {
         return y;
     }
+
 }

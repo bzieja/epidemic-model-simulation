@@ -91,4 +91,8 @@ public class Model {
     public synchronized void moveWorkers() {
         workers.forEach(Person::makeMove);
     }
+
+    public synchronized Cell getCellByCoordinates(int x, int y) {
+        return map[x][y];
+    }
 }

@@ -9,13 +9,11 @@ import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 @Component
 public class ModelInitializer {
@@ -68,36 +66,108 @@ public class ModelInitializer {
         model.setWorkers(workers);
     }
 
+    /**
+     * Create routes only for this buildings which could be destination place for workers
+     */
     private void createRouteTraces() {
         for (Building building : Building.values()) {
             if (building.equals(Building.CROWD) || building.equals(Building.WORKER) || building.equals(Building.PATH) || building.equals(Building.PARKING)) {
                 continue;
             }  else {
 
-                int[][] route = new int[model.getMapVerticalDimension()][model.getMapHorizontalDimension()];
                 List<Cell> destinationCells = model.getAllCellsCoordinatesByColor(building.getColor());
+                int[][] route = findTheShortestPathToGivenPlaces(destinationCells);
 
-                for (int i = 0; i < model.getMapVerticalDimension(); i++) {
-                    for (int j = 0; j < model.getMapHorizontalDimension(); j++) {
-                        if (model.isCellWalkable(i, j)) {
-                            int x = i;
-                            int y = j;
-                            route[i][j] = destinationCells.stream().mapToInt(c -> calculateDistanceFromPoint(x, y, c.getX(), c.getY())).min().getAsInt();
-                            //route[i][j] = calculateDistanceFromPoint(i, j, toX, toY);
-                        } else {
-                            route[i][j] = Integer.MAX_VALUE;
-                        }
-                    }
-                }
                 saveMatrixToTxt(route);
                 building.setRouteMap(route);
             }
         }
     }
 
-    private int calculateDistanceFromPoint(int x1, int y1, int x2, int y2) {
-        return (int) Math.round(Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)));
+    /**
+     * Computes the route for given places. There are cases:
+     * -1 if Cell is not walkable for human (human could walk only on non-negative values of route)
+     * 0 for Cells which are walkable and hasn't been visited by algorithm for some reason (e.g. Cell couldn't be reached)
+     * >0 distance to the source where 1 means that we are at the destination point
+     * @param places palces to which we want compute trace
+     * @return
+     */
+    private int[][] findTheShortestPathToGivenPlaces(List<Cell> places) {
+        final int distanceAtTheDestinationPoint = 1;
+        final int valueForNonWalkableFields = -1;
+        final int valueForNonVisitedFields = 0;
+        final int xDimension = model.getMapVerticalDimension();
+        final int yDimension = model.getMapHorizontalDimension();
+
+
+        int[][] route = new int[xDimension][yDimension];
+        Queue<Cell> queue = new LinkedList<>(places);
+
+        IntStream.range(0, xDimension * yDimension).
+                forEach(n -> route[n / yDimension][n % yDimension] = model.isCellWalkable(n / yDimension, n % yDimension) ? 0 : -1);
+        places.forEach(c -> route[c.getX()][c.getY()] = distanceAtTheDestinationPoint);
+
+
+        while (!queue.isEmpty()) {
+
+            Cell currentCell = queue.remove();
+            int x = currentCell.getX();
+            int y = currentCell.getY();
+            int currentCost = route[x][y];
+
+            //up
+            if (x - 1 > 0 && route[x - 1][y] == valueForNonVisitedFields) {
+                route[x-1][y]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x -1, y));
+            }
+
+            //up-right corner
+            if (x - 1 > 0 && y + 1 < yDimension && route[x-1][y+1] == valueForNonVisitedFields) {
+                route[x - 1][y + 1]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x - 1, y + 1));
+            }
+
+            //right
+            if (y + 1 < yDimension && route[x][y+1] == valueForNonVisitedFields) {
+                route[x][y + 1]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x, y + 1));
+            }
+
+            //down-right corner
+            if (x + 1 < xDimension && y + 1 < yDimension && route[x + 1][y + 1] == valueForNonVisitedFields) {
+                route[x + 1][y + 1]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x + 1, y + 1));
+            }
+
+            //down
+            if (x + 1 < xDimension && route[x + 1][y] == valueForNonVisitedFields) {
+                route[x + 1][y]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x + 1, y));
+            }
+
+            //down-left corner
+            if (x + 1 < xDimension && y - 1 > 0 && route[x + 1][y - 1] == valueForNonVisitedFields) {
+                route[x + 1][y - 1]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x + 1, y - 1));
+            }
+
+            //left corner
+            if (y - 1 > 0 && route[x][y - 1 ] == valueForNonVisitedFields) {
+                route[x][y - 1 ]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x,y - 1 ));
+            }
+
+            //up-left corner
+            if (x - 1 > 0 && y - 1 > 0 && route[x-1][y - 1] == valueForNonVisitedFields) {
+                route[x-1][y - 1]= currentCost + 1;
+                queue.add(model.getCellByCoordinates(x -1, y - 1));
+            }
+
+        }
+
+        return route;
     }
+
 
     private void saveMatrixToTxt(int[][] route) {
         try {

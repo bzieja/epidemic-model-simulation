@@ -106,6 +106,7 @@ public class View {
     }
 
     public void generateView() {
+        model.moveWorkers();
         int cellsToGenerateAtX = (int) Math.round(canvasID.getWidth() / scaleFactor);
         int cellsToGenerateAtY = (int) Math.round(canvasID.getHeight() / scaleFactor);
 

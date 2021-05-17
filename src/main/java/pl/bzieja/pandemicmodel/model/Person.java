@@ -85,9 +85,11 @@ public class Person {
             list.add(new AbstractMap.SimpleEntry<>("UP-LEFT", routeMap[x-1][y-1]));
         }
 
-        list.sort(Map.Entry.comparingByValue());
+        //list.sort(Map.Entry.comparingByValue());
 
-        String direction = list.get(0).getKey();
+        //String direction = list.get(0).getKey();
+        String direction = list.stream().filter(e -> e.getValue() >= 0).min(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+
 
         switch (direction) {
             case "UP":

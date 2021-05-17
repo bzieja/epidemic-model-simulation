@@ -16,6 +16,8 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class Presenter implements Initializable {
@@ -96,21 +98,24 @@ public class Presenter implements Initializable {
 //            }
 //        });
 
-        Executors.newFixedThreadPool(1).execute(() -> {
-            while(!model.areAllWorkersAtTheirDestinationPoints()) {
-                model.moveWorkers();
+        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+        scheduler.scheduleAtFixedRate(view::generateView, 2, 3, TimeUnit.SECONDS);
+
+//        Executors.newFixedThreadPool(5).execute(() -> {
+//            while(!model.areAllWorkersAtTheirDestinationPoints()) {
+//                model.moveWorkers();
+////
+////                try {
+////                    Thread.sleep(500);
+////                } catch (InterruptedException e) {
+////                    e.printStackTrace();
+////                }
 //
-//                try {
-//                    Thread.sleep(500);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-
-                Platform.runLater(view::generateView);
-
-
-            }
-        });
+//                Platform.runLater(view::generateView);
+//
+//
+//            }
+//        });
 
     }
 

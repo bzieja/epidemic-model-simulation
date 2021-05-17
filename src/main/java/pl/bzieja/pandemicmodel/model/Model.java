@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class Model {
@@ -23,7 +20,7 @@ public class Model {
         return map[x][y].isWalkable();
     }
 
-    public Color getCellColor(int x, int y){
+    public synchronized Color getCellColor(int x, int y){
 
         //check if someone from workers is on that cell
         long passerbyCounter = workers.stream().filter(p -> Arrays.equals(p.getCoordinates(), new int[]{x, y})).count();
@@ -88,7 +85,7 @@ public class Model {
         return workers.stream().allMatch(Person::isAtTheDestinationPoint);
     }
 
-    public synchronized void moveWorkers() {
+    public void moveWorkers() {
         workers.forEach(Person::makeMove);
     }
 

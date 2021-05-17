@@ -37,7 +37,7 @@ public enum Building {
         this.routeMap = routeMap;
     }
 
-    public int[][] getRouteMap() {
+    public synchronized int[][] getRouteMap() {
         return routeMap;
     }
 }

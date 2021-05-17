@@ -2,6 +2,7 @@ package pl.bzieja.pandemicmodel.presenter;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -17,12 +18,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
 
 @Component
 public class Presenter implements Initializable {
     public Button loadImageButton;
     public Canvas canvasID;
+    public Button stopButton;
+    public Button startButton;
     EventHandler<MouseEvent> loadImageEvent;
     Model model;
     ModelInitializer modelInitializer;
@@ -45,81 +50,65 @@ public class Presenter implements Initializable {
         System.out.println("End of initialization!");
     }
 
-    public void loadImage(ActionEvent actionEvent) {
+    public synchronized void loadImage(ActionEvent actionEvent) {
         modelInitializer.createModelFromImage();
     }
 
-    public void moveUp(ActionEvent actionEvent) {
+    public synchronized void moveUp(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveUp();
         view.generateView();
     }
 
-    public void moveLeft(ActionEvent actionEvent) {
+    public synchronized void moveLeft(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveLeft();
         view.generateView();
     }
 
-    public void moveRight(ActionEvent actionEvent) {
+    public synchronized void moveRight(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveRight();
         view.generateView();
     }
 
-    public void moveDown(ActionEvent actionEvent) {
+    public synchronized void moveDown(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveDown();
         view.generateView();
     }
 
-    public void zoomIn(ActionEvent actionEvent) {
+    public synchronized void zoomIn(ActionEvent actionEvent) {
         view.zoomIn();
         view.generateView();
     }
 
-    public void zoomOut(ActionEvent actionEvent) {
+    public synchronized void zoomOut(ActionEvent actionEvent) {
         view.zoomOut();
         view.generateView();
     }
 
-    public void startSimulation(ActionEvent actionEvent) {
+    public synchronized void startSimulation(ActionEvent actionEvent) {
 
+//        Disposable disposable = Observable
+//              .interval(1, 500, TimeUnit.MILLISECONDS)
+//              .forEach(t -> {
+//                  model.moveWorkers();
+//                  Platform.runLater(view::generateView);
+//              });
 
-//        Executors.newFixedThreadPool(1).execute(() ->{
-//            while (grainMap.hasEmptyCells()) {
-//                grainMap.nextStep();
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e)  {
-//                    e.printStackTrace();
-//                }
-//                Platform.runLater(canvasPrinter::generateView);
-//            }
-//        });
+                final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+                ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(() -> {
+                    model.moveWorkers();
+                    Platform.runLater(view::generateView);
+                }, 1, 500, TimeUnit.MILLISECONDS);
 
-        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
-        scheduler.scheduleAtFixedRate(view::generateView, 2, 3, TimeUnit.SECONDS);
-
-//        Executors.newFixedThreadPool(5).execute(() -> {
-//            while(!model.areAllWorkersAtTheirDestinationPoints()) {
-//                model.moveWorkers();
-////
-////                try {
-////                    Thread.sleep(500);
-////                } catch (InterruptedException e) {
-////                    e.printStackTrace();
-////                }
-//
-//                Platform.runLater(view::generateView);
-//
-//
-//            }
-//        });
+                stopButton.setOnAction(e -> future.cancel(true));
 
     }
 
 
-    public void stopSimulation(ActionEvent actionEvent) {
+    public synchronized void stopSimulation(ActionEvent actionEvent) {
+        startButton.setOnAction(this::startSimulation);
     }
 }

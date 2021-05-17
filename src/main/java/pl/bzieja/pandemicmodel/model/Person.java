@@ -13,13 +13,11 @@ public class Person {
     private int[] destinationCoordinates;
     //isActive ?
 
-
     public Person(int[] coordinates, Building workplace, int[] destinationCoordinates) {
         this.x = coordinates[0];
         this.y = coordinates[1];
         this.workplace = workplace;
         this.destinationCoordinates = destinationCoordinates;
-
     }
 
     public int[] getCoordinates() {
@@ -30,64 +28,52 @@ public class Person {
         return x == destinationCoordinates[0] && y == destinationCoordinates[1];
     }
 
-    public void makeMove() {
+    public synchronized void makeMove() {
         routeMap = workplace.getRouteMap();
-        //Map<String, Integer> costOfMove = new HashMap<>();
         List<Map.Entry<String, Integer>> list = new ArrayList<>();
         int xDimension = routeMap.length;
         int yDimension = routeMap[0].length;
 
         //up
         if (x - 1 > 0) {
-            //costOfMove.put("UP", routeMap[x-1][y]);
             list.add(new AbstractMap.SimpleEntry<>("UP", routeMap[x-1][y]));
         }
 
         //up-right corner
         if (x - 1 > 0 && y + 1 < yDimension) {
-            //costOfMove.put("UP-RIGHT", routeMap[x-1][y+1]);
             list.add(new AbstractMap.SimpleEntry<>("UP-RIGHT", routeMap[x-1][y+1]));
         }
 
         //right
         if (y + 1 < yDimension) {
-            //costOfMove.put("RIGHT", routeMap[x][y+1]);
             list.add(new AbstractMap.SimpleEntry<>("RIGHT", routeMap[x][y+1]));
         }
 
         //down-right corner
         if (x + 1 < xDimension && y + 1 < yDimension) {
-            //costOfMove.put("DOWN-RIGHT", routeMap[x+1][y+1]);
             list.add(new AbstractMap.SimpleEntry<>("DOWN-RIGHT", routeMap[x+1][y+1]));
         }
 
         //down
         if (x + 1 < xDimension) {
-            //costOfMove.put("DOWN", routeMap[x+1][y]);
             list.add(new AbstractMap.SimpleEntry<>("DOWN", routeMap[x+1][y]));
         }
 
         //down-left corner
         if (x + 1 < xDimension && y - 1 > 0) {
-            //costOfMove.put("DOWN-LEFT", routeMap[x+1][y-1]);
             list.add(new AbstractMap.SimpleEntry<>("DOWN-LEFT", routeMap[x+1][y-1]));
         }
 
         //left corner
         if (y - 1 > 0) {
-            //costOfMove.put("LEFT", routeMap[x][y-1]);
             list.add(new AbstractMap.SimpleEntry<>("LEFT", routeMap[x][y-1]));
         }
 
         //up-left corner
         if (x - 1 > 0 && y - 1 > 0 ) {
-            //costOfMove.put("UP-LEFT", routeMap[x-1][y-1]);
             list.add(new AbstractMap.SimpleEntry<>("UP-LEFT", routeMap[x-1][y-1]));
         }
 
-        //list.sort(Map.Entry.comparingByValue());
-
-        //String direction = list.get(0).getKey();
         String direction = list.stream().filter(e -> e.getValue() >= 0).min(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
 
 
@@ -121,7 +107,7 @@ public class Person {
                 this.y--;
                 break;
             default:
-                System.out.println("No direction");
+                System.err.println("No direction");
         }
 
 

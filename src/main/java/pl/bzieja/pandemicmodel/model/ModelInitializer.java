@@ -37,12 +37,10 @@ public class ModelInitializer {
                 for (int j = 0; j < width; j++) {
                     Color currentColor = new Color(bmp.getRGB(j, i));
 
-                    if (Building.PATH.getColor().equals(currentColor) || Building.PARKING.getColor().equals(currentColor)) {
-                        map[i][j] = new Path(currentColor, i, j);
-                    } else if (Building.SPAWN.getColor().equals(currentColor)) {
-                        map[i][j] = new Spawn(currentColor, i, j);
+                    if (Building.walkable.stream().anyMatch(b -> b.getColor().equals(currentColor))) {
+                        map[i][j] = new Cell(i, j, true, currentColor);
                     } else {
-                        map[i][j] = new Background(currentColor, i, j);
+                        map[i][j] = new Cell(i, j, false, currentColor);
                     }
                 }
             }
@@ -51,18 +49,18 @@ public class ModelInitializer {
             e.printStackTrace();
         }
 
-        createWorkers();
         createRouteTraces();
+        createWorkers();
     }
 
     private void createWorkers() {
         List<Person> workers = new ArrayList<>();
 
-        for (Building building : Building.values()) {
-            for (int i = 0; i < building.getNumberOfWorkers(); i++) {
-                workers.add(new Person(model.getCellCoordinateByColor(Building.SPAWN.getColor()), building, model.getCellCoordinateByColor(building.getColor())));
-            }
-        }
+        Building.buildings.stream()
+                .filter(building -> building.getNumberOfWorkers() > 0)
+                .forEach(building -> IntStream.range(0, building.getNumberOfWorkers())
+                .forEach(i -> workers.add(new Person(model.getRandomCellCoordinateByColor(Building.SPAWN.getColor()), building, model.getAllCellsCoordinatesByColor(building.getColor())))));
+
         model.setWorkers(workers);
     }
 
@@ -70,18 +68,19 @@ public class ModelInitializer {
      * Create routes only for this buildings which could be destination place for workers
      */
     private void createRouteTraces() {
-        for (Building building : Building.values()) {
-            if (building.equals(Building.CROWD) || building.equals(Building.WORKER) || building.equals(Building.PATH) || building.equals(Building.PARKING)) {
-                continue;
-            }  else {
 
-                List<Cell> destinationCells = model.getAllCellsCoordinatesByColor(building.getColor());
-                int[][] route = findTheShortestPathToGivenPlaces(destinationCells);
+        Building.buildings.forEach(b -> b.setRouteMap(findTheShortestPathToGivenPlaces(model.getAllCellsCoordinatesByColor(b.getColor()))));
 
-                saveMatrixToTxt(route);
-                building.setRouteMap(route);
-            }
-        }
+//        for (Building building : Building.values()) {
+//            if (Building.buildings.stream().anyMatch(b -> building == b)) {
+//
+//                List<Cell> destinationCells = model.getAllCellsCoordinatesByColor(building.getColor());
+//                int[][] route = findTheShortestPathToGivenPlaces(destinationCells);
+//
+//                saveMatrixToTxt(route);
+//                building.setRouteMap(route);
+//            }
+//        }
     }
 
     /**
@@ -94,7 +93,7 @@ public class ModelInitializer {
      */
     private int[][] findTheShortestPathToGivenPlaces(List<Cell> places) {
         final int distanceAtTheDestinationPoint = 1;
-        final int valueForNonWalkableFields = -1;
+        final int valueForNonWalkableFields = Integer.MAX_VALUE;
         final int valueForNonVisitedFields = 0;
         final int xDimension = model.getMapVerticalDimension();
         final int yDimension = model.getMapHorizontalDimension();
@@ -104,7 +103,7 @@ public class ModelInitializer {
         Queue<Cell> queue = new LinkedList<>(places);
 
         IntStream.range(0, xDimension * yDimension).
-                forEach(n -> route[n / yDimension][n % yDimension] = model.isCellWalkable(n / yDimension, n % yDimension) ? 0 : -1);
+                forEach(n -> route[n / yDimension][n % yDimension] = model.isCellWalkable(n / yDimension, n % yDimension) ? 0 : valueForNonWalkableFields);
         places.forEach(c -> route[c.getX()][c.getY()] = distanceAtTheDestinationPoint);
 
 
@@ -176,7 +175,7 @@ public class ModelInitializer {
             {
                 for(int j = 0; j < route.length; j++)//for each column
                 {
-                    builder.append(route[i][j]+"");//append to the output string
+                    builder.append(route[i][j]+ "\t");//append to the output string
                     if(j < route.length - 1)//if this is not the last row element
                         builder.append(",");//then add comma (if you don't like commas you can use spaces)
                 }

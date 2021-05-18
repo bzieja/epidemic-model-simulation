@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Component
 public class Model {
@@ -23,9 +26,11 @@ public class Model {
     public synchronized Color getCellColor(int x, int y){
 
         //check if someone from workers is on that cell
-        long passerbyCounter = workers.stream().filter(p -> Arrays.equals(p.getCoordinates(), new int[]{x, y})).count();
+        long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
 
-        if (passerbyCounter == 1) {
+        if (map[x][y].getColor().equals(Building.SPAWN.getColor())) {
+            return Building.PATH.getColor();
+        } else if (passerbyCounter == 1) {
             return Building.WORKER.getColor();
         } else if (passerbyCounter > 1) {
             return Building.CROWD.getColor();
@@ -42,33 +47,13 @@ public class Model {
         return map[0].length;
     }
 
-    public int[] getCellCoordinateByColor(Color color) {
-        //return Arrays.stream(map).flatMap(Stream::of).filter(e ->e.getColor().equals(color)).findFirst().orElseThrow().getCoordinates();
-
-        List<Cell> list = new ArrayList<>();
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j].getColor().equals(color)) {
-                    list.add(map[i][j]);
-                }
-            }
-        }
-
-        return list.get(new Random().nextInt(list.size())).getCoordinates();
-
-       //return Arrays.stream(map).flatMap(Stream::of).filter(e ->e.getColor().equals(color)).sorted((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2)).findAny().orElseThrow().getCoordinates();
+    public int[] getRandomCellCoordinateByColor(Color color) {
+       List<Cell> list = Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getColor().equals(color)).collect(Collectors.toList());
+       return list.get(new Random().nextInt(list.size())).getCoordinates();
     }
 
     public List<Cell> getAllCellsCoordinatesByColor(Color color) {
-        List<Cell> list = new ArrayList<>();
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j].getColor().equals(color)) {
-                    list.add(map[i][j]);
-                }
-            }
-        }
-        return list;
+        return Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getColor().equals(color)).collect(Collectors.toList());
     }
 
     public void setMap(Cell[][] map) {
@@ -80,7 +65,6 @@ public class Model {
     }
 
     //it will be uneccessary later, just for demonstraiting main animating loop now
-
     public boolean areAllWorkersAtTheirDestinationPoints() {
         return workers.stream().allMatch(Person::isAtTheDestinationPoint);
     }
@@ -91,5 +75,33 @@ public class Model {
 
     public synchronized Cell getCellByCoordinates(int x, int y) {
         return map[x][y];
+    }
+
+    public void workersToWork() {
+        workers.forEach(p -> {
+            p.setDestinationCells(getAllCellsCoordinatesByColor(p.getWorkplace().getColor()));
+            p.setRouteMap(p.getWorkplace().getRouteMap());
+        });
+    }
+
+    public void workersToLunch() {
+        workers.forEach(p -> {
+            Building building = new ArrayList<>(Building.gastronomy).get(new Random().nextInt(Building.gastronomy.size()));
+            p.setDestinationCells(getAllCellsCoordinatesByColor(building.getColor()));
+            p.setRouteMap(building.getRouteMap());
+        });
+    }
+
+    public void workersGoBackHome() {
+        workers.forEach(p -> {
+            p.setDestinationCells(getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));
+            p.setRouteMap(Building.SPAWN.getRouteMap());
+        });
+    }
+
+    public void workersGoAroundBuildingIfAreAtDestinationPoint() {
+        workers.stream().filter(Person::isAtTheDestinationPoint).forEach(p -> {
+            p.setRouteMap(Building.BUILDING_INTERIOR.getRouteMap());
+        });
     }
 }

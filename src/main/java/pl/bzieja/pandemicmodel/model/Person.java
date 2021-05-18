@@ -1,41 +1,58 @@
 package pl.bzieja.pandemicmodel.model;
 
 import pl.bzieja.pandemicmodel.model.cell.Building;
+import pl.bzieja.pandemicmodel.model.cell.Cell;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Person {
 
     private int [][] routeMap;
     private int x;
     private int y;
-    private Building workplace;
-    private int[] destinationCoordinates;
+    private final Building workplace;
+    List<Cell> destinationCells;
     //isActive ?
 
-    public Person(int[] coordinates, Building workplace, int[] destinationCoordinates) {
+    public Person(int[] coordinates, Building workplace, List<Cell> destinationCells) {
         this.x = coordinates[0];
         this.y = coordinates[1];
         this.workplace = workplace;
-        this.destinationCoordinates = destinationCoordinates;
-    }
-
-    public int[] getCoordinates() {
-        return new int[]{this.x, this.y};
+        this.destinationCells = destinationCells;
     }
 
     public boolean isAtTheDestinationPoint() {
-        return x == destinationCoordinates[0] && y == destinationCoordinates[1];
+        return destinationCells.stream().anyMatch(c -> c.getX() == x && c.getY() == y);
+    }
+
+    public void goToWorkplace() {
+        routeMap = workplace.getRouteMap();
+    }
+
+    public void goWalkAroundTheBuilding() {
+        routeMap = Building.BUILDING_INTERIOR.getRouteMap();
+    }
+
+    public void goLunch() {
+
+        routeMap = new ArrayList<>(Building.gastronomy).get(new Random().nextInt(Building.gastronomy.size())).getRouteMap();
+
+    }
+
+    public void goBackHome() {
+        routeMap = Building.SPAWN.getRouteMap();
     }
 
     public synchronized void makeMove() {
-        routeMap = workplace.getRouteMap();
+
+
         List<Map.Entry<String, Integer>> list = new ArrayList<>();
         int xDimension = routeMap.length;
         int yDimension = routeMap[0].length;
 
         //up
-        if (x - 1 > 0) {
+        if (x - 1 > 0 ) {
             list.add(new AbstractMap.SimpleEntry<>("UP", routeMap[x-1][y]));
         }
 
@@ -74,8 +91,10 @@ public class Person {
             list.add(new AbstractMap.SimpleEntry<>("UP-LEFT", routeMap[x-1][y-1]));
         }
 
-        String direction = list.stream().filter(e -> e.getValue() >= 0).min(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
-
+        //String direction = list.stream().filter(e -> e.getValue() >= 0).sorted(Comparator.comparingInt(Map.Entry::getValue)).collect(Collectors.toList()).get(0).getKey();
+        list.sort(Comparator.comparingInt(Map.Entry::getValue));
+        var listOfPotentialMoves = list.stream().filter(c -> c.getValue().equals(list.get(0).getValue())).collect(Collectors.toList());
+        String direction = listOfPotentialMoves.get(new Random().nextInt(listOfPotentialMoves.size())).getKey();
 
         switch (direction) {
             case "UP":
@@ -111,5 +130,25 @@ public class Person {
         }
 
 
+    }
+
+    public synchronized void setRouteMap(int[][] routeMap) {
+        this.routeMap = routeMap;
+    }
+
+    public synchronized void setDestinationCells(List<Cell> destinationCells) {
+        this.destinationCells = destinationCells;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Building getWorkplace() {
+        return workplace;
     }
 }

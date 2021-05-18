@@ -1,8 +1,9 @@
 package pl.bzieja.pandemicmodel.presenter;
 
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -16,9 +17,6 @@ import pl.bzieja.pandemicmodel.view.View;
 import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
@@ -44,14 +42,9 @@ public class Presenter implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         canvasID.setVisible(true);
         modelInitializer.createModelFromImage();
-        //view.generateView(canvasID);
         view.setCanvas(canvasID);
         view.generateView();
         System.out.println("End of initialization!");
-    }
-
-    public synchronized void loadImage(ActionEvent actionEvent) {
-        modelInitializer.createModelFromImage();
     }
 
     public synchronized void moveUp(ActionEvent actionEvent) {
@@ -88,27 +81,52 @@ public class Presenter implements Initializable {
         view.generateView();
     }
 
-    public synchronized void startSimulation(ActionEvent actionEvent) {
+    public synchronized void goWork(ActionEvent actionEvent) {
 
-//        Disposable disposable = Observable
-//              .interval(1, 500, TimeUnit.MILLISECONDS)
-//              .forEach(t -> {
-//                  model.moveWorkers();
-//                  Platform.runLater(view::generateView);
-//              });
+        model.workersToWork();
+        Disposable disposable = Observable
+              .interval(1, 1000, TimeUnit.MILLISECONDS)
+              .forEach(t -> {
+                  model.moveWorkers();
+                  model.workersGoAroundBuildingIfAreAtDestinationPoint();
+                  Platform.runLater(view::generateView);
+              });
+        stopButton.setOnAction(e -> disposable.dispose());
+//        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//        ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(() -> {
+//            Platform.runLater(view::generateView);
+//            model.moveWorkers();
+//        }, 1, 2000, TimeUnit.MILLISECONDS);
 
-                final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
-                ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(() -> {
-                    model.moveWorkers();
-                    Platform.runLater(view::generateView);
-                }, 1, 500, TimeUnit.MILLISECONDS);
+      //  stopButton.setOnAction(e -> future.cancel(true));
 
-                stopButton.setOnAction(e -> future.cancel(true));
 
     }
 
+    public void goLunch(ActionEvent actionEvent) {
 
-    public synchronized void stopSimulation(ActionEvent actionEvent) {
-        startButton.setOnAction(this::startSimulation);
+        model.workersToLunch();
+        Disposable disposable = Observable
+                .interval(1, 1000, TimeUnit.MILLISECONDS)
+                .forEach(t -> {
+                    model.moveWorkers();
+                    model.workersGoAroundBuildingIfAreAtDestinationPoint();
+                    Platform.runLater(view::generateView);
+                });
+        stopButton.setOnAction(e -> disposable.dispose());
+    }
+
+    public void goBackHome(ActionEvent actionEvent) {
+        model.workersGoBackHome();
+        Disposable disposable = Observable
+                .interval(1, 1000, TimeUnit.MILLISECONDS)
+                .forEach(t -> {
+                    model.moveWorkers();
+                    Platform.runLater(view::generateView);
+                });
+        stopButton.setOnAction(e -> disposable.dispose());
+    }
+
+    public void stopSimulation(ActionEvent actionEvent) {
     }
 }

@@ -1,24 +1,20 @@
 package pl.bzieja.pandemicmodel.model.cell;
 
-import pl.bzieja.pandemicmodel.model.Person;
-
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-public abstract class Cell {
+public class Cell {
     protected boolean walkable;
     protected Color color;
     protected int x;
     protected int y;
 
 
-    public Cell(boolean walkable, Color color, int x, int y) {
-        this.walkable = walkable;
-        this.color = color;
+    public Cell(int x, int y, boolean walkable, Color color) {
         this.x = x;
         this.y = y;
+        this.walkable = walkable;
+        this.color = color;
     }
 
     public Color getColor() {

@@ -36,17 +36,17 @@
 
 
 
-<!--        <dependency>-->
-<!--            <groupId>io.reactivex.rxjava3</groupId>-->
-<!--            <artifactId>rxjava</artifactId>-->
-<!--            <version>3.0.13-RC4</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.reactivex.rxjava3</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>3.0.13-RC4</version>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.reactivestreams</groupId>-->
-<!--            <artifactId>reactive-streams</artifactId>-->
-<!--            <version>1.0.3</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.reactivestreams</groupId>
+            <artifactId>reactive-streams</artifactId>
+            <version>1.0.3</version>
+        </dependency>
 
     </dependencies>
 

@@ -13,7 +13,9 @@
       <Button fx:id="downButton" layoutX="96.0" layoutY="394.0" mnemonicParsing="false" onAction="#moveDown" prefHeight="25.0" prefWidth="52.0" text="Down" />
       <Button fx:id="zoomInButton" layoutX="216.0" layoutY="348.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="25.0" prefWidth="87.0" text="Zoom in \ +" />
       <Button fx:id="zoomOutButton" layoutX="216.0" layoutY="382.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="25.0" prefWidth="87.0" text="Zoom out \ -" />
-      <Button fx:id="startButton" layoutX="333.0" layoutY="325.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="25.0" prefWidth="52.0" text="Start" />
+      <Button fx:id="goWorkButton" layoutX="333.0" layoutY="325.0" mnemonicParsing="false" onAction="#goWork" prefHeight="31.0" prefWidth="87.0" text="Go Work" />
       <Button fx:id="stopButton" layoutX="333.0" layoutY="361.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="25.0" prefWidth="52.0" text="Stop" />
+      <Button fx:id="goLunchButton" layoutX="446.0" layoutY="325.0" mnemonicParsing="false" onAction="#goLunch" text="Lunch event" />
+      <Button fx:id="goBackHomeButton" layoutX="565.0" layoutY="325.0" mnemonicParsing="false" onAction="#goBackHome" text="Go back home" />
    </children>
 </AnchorPane>

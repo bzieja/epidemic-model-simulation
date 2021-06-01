@@ -1,7 +1,13 @@
 package pl.bzieja.pandemicmodel.presenter;
 
-import io.reactivex.rxjava3.core.*;
-import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+//import io.reactivex.rxjava3.annotations.NonNull;
+//import io.reactivex.rxjava3.core.*;
+//import io.reactivex.rxjava3.disposables.Disposable;
+//import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
+import io.reactivex.schedulers.Schedulers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,54 +49,69 @@ public class Presenter implements Initializable {
         canvasID.setVisible(true);
         modelInitializer.createModelFromImage();
         view.setCanvas(canvasID);
-        view.generateView();
+        view.generateNewView();
         System.out.println("End of initialization!");
     }
 
     public synchronized void moveUp(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveUp();
-        view.generateView();
+        view.generateNewView();
     }
 
     public synchronized void moveLeft(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveLeft();
-        view.generateView();
+        view.generateNewView();
     }
 
     public synchronized void moveRight(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveRight();
-        view.generateView();
+        view.generateNewView();
     }
 
     public synchronized void moveDown(ActionEvent actionEvent) {
         canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveDown();
-        view.generateView();
+        view.generateNewView();
     }
 
     public synchronized void zoomIn(ActionEvent actionEvent) {
         view.zoomIn();
-        view.generateView();
+        view.generateNewView();
     }
 
     public synchronized void zoomOut(ActionEvent actionEvent) {
         view.zoomOut();
-        view.generateView();
+        view.generateNewView();
     }
 
     public synchronized void goWork(ActionEvent actionEvent) {
 
         model.workersToWork();
-        Disposable disposable = Observable
+//        Disposable disposable = Observable
+//                .interval(1, 700, TimeUnit.MILLISECONDS)
+//                //.observeOn(Schedulers.computation())
+//                .doOnNext(tick -> {
+//                    model.moveWorkers();
+//                    model.workersGoAroundBuildingIfAreAtDestinationPoint();
+//                    model.actualizeColorOfCells();
+//                    Platform.runLater(() -> view.drawCells());
+//                });
+//                //.observeOn(JavaFxScheduler.platform())//javafx scheduler
+                //.sample(500, TimeUnit.MILLISECONDS)
+                //.subscribe(Platform.runLater(() -> view.drawCells()););
+
+              Disposable disposable = Observable
               .interval(1, 1000, TimeUnit.MILLISECONDS)
               .forEach(t -> {
                   model.moveWorkers();
                   model.workersGoAroundBuildingIfAreAtDestinationPoint();
-                  Platform.runLater(view::generateView);
+                  model.actualizeColorOfCells();
+                  Platform.runLater(view::drawCells);
               });
+
         stopButton.setOnAction(e -> disposable.dispose());
 //        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 //        ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(() -> {
@@ -111,7 +132,7 @@ public class Presenter implements Initializable {
                 .forEach(t -> {
                     model.moveWorkers();
                     model.workersGoAroundBuildingIfAreAtDestinationPoint();
-                    Platform.runLater(view::generateView);
+                    Platform.runLater(view::generateNewView);
                 });
         stopButton.setOnAction(e -> disposable.dispose());
     }
@@ -119,10 +140,10 @@ public class Presenter implements Initializable {
     public void goBackHome(ActionEvent actionEvent) {
         model.workersGoBackHome();
         Disposable disposable = Observable
-                .interval(1, 1000, TimeUnit.MILLISECONDS)
+                .interval(1, 600, TimeUnit.MILLISECONDS)
                 .forEach(t -> {
                     model.moveWorkers();
-                    Platform.runLater(view::generateView);
+                    Platform.runLater(view::generateNewView);
                 });
         stopButton.setOnAction(e -> disposable.dispose());
     }

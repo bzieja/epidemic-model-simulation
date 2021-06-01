@@ -1,24 +1,31 @@
 package pl.bzieja.pandemicmodel.model.cell;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import java.awt.Color;
 import java.util.Objects;
 
 public class Cell {
     protected boolean walkable;
-    protected Color color;
+    protected Color defaultColor;
+    protected Property<Color> color;
     protected int x;
     protected int y;
 
 
-    public Cell(int x, int y, boolean walkable, Color color) {
+    public Cell(int x, int y, boolean walkable, Color defaultColor) {
         this.x = x;
         this.y = y;
         this.walkable = walkable;
-        this.color = color;
+        this.defaultColor = defaultColor;
+        this.color = new SimpleObjectProperty<>(defaultColor);
     }
 
-    public Color getColor() {
-        return color;
+    public Color getDefaultColor() {
+        return defaultColor;
     }
 
     public boolean isWalkable() {
@@ -48,5 +55,21 @@ public class Cell {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    public void setColor(Color color) {
+        this.color.setValue(color);
+    }
+
+    public void resetColorToDefault() {
+        this.color.setValue(defaultColor);
+    }
+
+    public Color getColor() {
+        return color.getValue();
+    }
+
+    public Property<Color> getColorProperty() {
+        return color;
     }
 }

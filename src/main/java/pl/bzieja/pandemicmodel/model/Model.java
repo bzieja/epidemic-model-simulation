@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Component
@@ -23,21 +22,22 @@ public class Model {
         return map[x][y].isWalkable();
     }
 
-    public synchronized Color getCellColor(int x, int y){
+//    public Color getCellColor(int x, int y) {
+//
+//        //check if someone from workers is on that cell
+//        long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
+//
+//        if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
+//            return Building.PATH.getColor();
+//        } else if (passerbyCounter == 1) {
+//            return Building.WORKER.getColor();
+//        } else if (passerbyCounter > 1) {
+//            return Building.CROWD.getColor();
+//        } else {
+//            return map[x][y].getDefaultColor();
+//        }
+//    }
 
-        //check if someone from workers is on that cell
-        long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
-
-        if (map[x][y].getColor().equals(Building.SPAWN.getColor())) {
-            return Building.PATH.getColor();
-        } else if (passerbyCounter == 1) {
-            return Building.WORKER.getColor();
-        } else if (passerbyCounter > 1) {
-            return Building.CROWD.getColor();
-        } else {
-            return map[x][y].getColor();
-        }
-    }
 
     public int getMapVerticalDimension() {
         return map.length;
@@ -48,12 +48,12 @@ public class Model {
     }
 
     public int[] getRandomCellCoordinateByColor(Color color) {
-       List<Cell> list = Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getColor().equals(color)).collect(Collectors.toList());
+       List<Cell> list = Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getDefaultColor().equals(color)).collect(Collectors.toList());
        return list.get(new Random().nextInt(list.size())).getCoordinates();
     }
 
     public List<Cell> getAllCellsCoordinatesByColor(Color color) {
-        return Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getColor().equals(color)).collect(Collectors.toList());
+        return Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getDefaultColor().equals(color)).collect(Collectors.toList());
     }
 
     public void setMap(Cell[][] map) {
@@ -103,5 +103,29 @@ public class Model {
         workers.stream().filter(Person::isAtTheDestinationPoint).forEach(p -> {
             p.setRouteMap(Building.BUILDING_INTERIOR.getRouteMap());
         });
+    }
+
+    public synchronized void actualizeColorOfCells() {
+        Arrays.stream(map).flatMap(Stream::of).forEach(c -> {
+            int x = c.getX();
+            int y = c.getY();
+
+            long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
+
+            if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
+
+            } else if (passerbyCounter == 1) {
+                c.setColor(Building.WORKER.getColor());
+            } else if (passerbyCounter > 1) {
+                c.setColor(Building.CROWD.getColor());
+            } else {
+                c.resetColorToDefault();
+            }
+
+        });
+    }
+
+    public Color getCellColor(int i, int j) {
+        return map[i][j].getColor();
     }
 }

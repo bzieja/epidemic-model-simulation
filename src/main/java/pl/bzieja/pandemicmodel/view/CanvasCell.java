@@ -16,27 +16,31 @@ import java.awt.*;
  */
 public class CanvasCell {
 
-    private final int i;
-    private final int j;
-    private final double cellXDimension;
-    private final double cellYDimension;
-    Property<Color> color = new SimpleObjectProperty<>();
-    Cell cellToFollow;
-    private Canvas canvasID;
-    boolean toRedraw = false;
+    private int previousI;
+    private int previousJ;
+    private int i;
+    private int j;
+//    private final double cellXDimension;
+//    private final double cellYDimension;
+//    Property<Color> color = new SimpleObjectProperty<>();
+//    boolean toRedraw = false;
 
-    public CanvasCell(int i, int j, double cellXDimension, double cellYDimension, Cell cellToFollow, Canvas canvasID) {
+//    public CanvasCell(int i, int j, double cellXDimension, double cellYDimension, Property<Color> colorToFollow) {
+//        this.i = i;
+//        this.j = j;
+//        this.cellXDimension = cellXDimension;
+//        this.cellYDimension = cellYDimension;
+//        color.bind(colorToFollow);
+//
+//        this.color.addListener(changeColorListener);
+//    }
+
+    public CanvasCell(int i, int j) {
         this.i = i;
         this.j = j;
-        this.cellXDimension = cellXDimension;
-        this.cellYDimension = cellYDimension;
-        color.bind(cellToFollow.getColorProperty());
-        this.canvasID = canvasID;
-
-        this.cellToFollow = cellToFollow;
-        this.cellToFollow.getColorProperty().addListener(changeColorListener);
+        previousI = i;
+        previousJ = j;
     }
-
 
     public int getI() {
         return i;
@@ -46,27 +50,32 @@ public class CanvasCell {
         return j;
     }
 
-    public double getCellXDimension() {
-        return cellXDimension;
-    }
 
-    public double getCellYDimension() {
-        return cellYDimension;
-    }
+//    public double getCellXDimension() {
+//        return cellXDimension;
+//    }
+//
+//    public double getCellYDimension() {
+//        return cellYDimension;
+//    }
+//
+//    public void removeListener(){
+//        this.color.removeListener(changeColorListener);
+//    }
 
-    public void removeListener(){
-        cellToFollow.getColorProperty().removeListener(changeColorListener);
-    }
-
-    private ChangeListener<Color> changeColorListener = new ChangeListener<Color>() {
-        @Override
-        public void changed(ObservableValue<? extends Color> observableValue, Color color, Color t1) {
-            toRedraw = true;
-            //hasBeenChanged = true;
-            //View.draw(javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0), i, j, cellXDimension, cellYDimension);
-            //Platform.runLater(() -> draw());
-        }
-    };
+//    private ChangeListener<Color> changeColorListener = new ChangeListener<Color>() {
+//        @Override
+//        public void changed(ObservableValue<? extends Color> observableValue, Color color, Color t1) {
+//            //View.draw(javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0), i, j, cellXDimension, cellYDimension);
+////            GraphicsContext graphicsContext = View.getCanvasID().getGraphicsContext2D();
+////            graphicsContext.beginPath();
+////            graphicsContext.setFill(javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0));
+////            graphicsContext.rect(j * cellYDimension, i * cellXDimension, cellYDimension, cellXDimension);
+////            System.out.println("Change from CanvasCell");
+////            graphicsContext.fill();
+//            Platform.runLater(() -> View.draw(javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0), i, j, cellXDimension, cellYDimension));
+//        }
+//    };
 //
 //    protected void draw() {
 //        //System.out.println("Static draw color: " + color + " for cell i: " + i + " j: " + j);

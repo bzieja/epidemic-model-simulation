@@ -105,27 +105,47 @@ public class Model {
         });
     }
 
-    public synchronized void actualizeColorOfCells() {
-        Arrays.stream(map).flatMap(Stream::of).forEach(c -> {
-            int x = c.getX();
-            int y = c.getY();
+//    public synchronized void actualizeColorOfCells() {
+//        Arrays.stream(map).flatMap(Stream::of).forEach(c -> {
+//            int x = c.getX();
+//            int y = c.getY();
+//
+//            long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
+//
+//            if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
+//
+//            } else if (passerbyCounter == 1) {
+//                c.setColor(Building.WORKER.getColor());
+//            } else if (passerbyCounter > 1) {
+//                c.setColor(Building.CROWD.getColor());
+//            } else {
+//                c.resetColorToDefault();
+//            }
+//
+//        });
+//    }
 
-            long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
+//    public Color getCellColor(int i, int j) {
+//        return map[i][j].getColor();
+//    }
 
-            if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
+    public  Color getCellColor(int x, int y){
 
-            } else if (passerbyCounter == 1) {
-                c.setColor(Building.WORKER.getColor());
-            } else if (passerbyCounter > 1) {
-                c.setColor(Building.CROWD.getColor());
-            } else {
-                c.resetColorToDefault();
-            }
+        //check if someone from workers is on that cell
+        long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
 
-        });
+        if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
+            return Building.PATH.getColor();
+        } else if (passerbyCounter == 1) {
+            return Building.WORKER.getColor();
+        } else if (passerbyCounter > 1) {
+            return Building.CROWD.getColor();
+        } else {
+            return map[x][y].getDefaultColor();
+        }
     }
 
-    public Color getCellColor(int i, int j) {
-        return map[i][j].getColor();
+    public List<Person> getWorkers() {
+        return workers;
     }
 }

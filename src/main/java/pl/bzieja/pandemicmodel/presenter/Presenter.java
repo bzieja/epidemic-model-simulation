@@ -102,14 +102,15 @@ public class Presenter implements Initializable {
 //                //.observeOn(JavaFxScheduler.platform())//javafx scheduler
                 //.sample(500, TimeUnit.MILLISECONDS)
                 //.subscribe(Platform.runLater(() -> view.drawCells()););
-
+        view.generateNewView();
               Disposable disposable = Observable
               .interval(1, 1000, TimeUnit.MILLISECONDS)
               .forEach(t -> {
                   model.moveWorkers();
                   model.workersGoAroundBuildingIfAreAtDestinationPoint();
-                  model.actualizeColorOfCells();
-                  Platform.runLater(view::drawCells);
+                  Platform.runLater(() -> view.generateViewForWorkersOnly());
+                  //model.actualizeColorOfCells();
+                  //Platform.runLater(view::drawCells);
               });
 
         stopButton.setOnAction(e -> disposable.dispose());

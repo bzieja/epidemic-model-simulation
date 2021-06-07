@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Cell {
     protected boolean walkable;
     protected Color defaultColor;
-    protected Property<Color> color;
+    //protected Property<Color> color;
     protected int x;
     protected int y;
 
@@ -21,7 +21,7 @@ public class Cell {
         this.y = y;
         this.walkable = walkable;
         this.defaultColor = defaultColor;
-        this.color = new SimpleObjectProperty<>(defaultColor);
+        //this.color = new SimpleObjectProperty<>(defaultColor);
     }
 
     public Color getDefaultColor() {
@@ -57,19 +57,22 @@ public class Cell {
         return Objects.hash(x, y);
     }
 
-    public void setColor(Color color) {
-        this.color.setValue(color);
-    }
 
-    public void resetColorToDefault() {
-        this.color.setValue(defaultColor);
-    }
 
-    public Color getColor() {
-        return color.getValue();
-    }
-
-    public Property<Color> getColorProperty() {
-        return color;
-    }
+//    public void setColor(Color color) {
+//        this.color.setValue(color);
+//        System.out.println("Change from Cell");
+//    }
+//
+//    public void resetColorToDefault() {
+//        this.color.setValue(defaultColor);
+//    }
+//
+//    public Color getColor() {
+//        return color.getValue();
+//    }
+//
+//    public Property<Color> getColorProperty() {
+//        return color;
+//    }
 }

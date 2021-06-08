@@ -1,5 +1,6 @@
-package pl.bzieja.pandemicmodel.view;
+package pl.bzieja.pandemicmodel.view.coordinates;
 
+import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -13,6 +14,7 @@ public class RelativeCoordinates {
         this.relativeX = relativeX;
         this.relativeY = relativeY;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -30,4 +32,5 @@ public class RelativeCoordinates {
     public double[] getCoordinates () {
         return new double[] {relativeX, relativeY};
     }
+
 }

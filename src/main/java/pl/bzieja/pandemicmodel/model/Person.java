@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 public class Person {
 
     private int [][] routeMap;
+    private int previousX;
+    private int previousY;
     private int x;
     private int y;
     private final Building workplace;
@@ -18,6 +20,8 @@ public class Person {
     public Person(int[] coordinates, Building workplace, List<Cell> destinationCells) {
         this.x = coordinates[0];
         this.y = coordinates[1];
+        previousX = coordinates[0];
+        previousY = coordinates[1];
         this.workplace = workplace;
         this.destinationCells = destinationCells;
     }
@@ -35,9 +39,7 @@ public class Person {
     }
 
     public void goLunch() {
-
         routeMap = new ArrayList<>(Building.gastronomy).get(new Random().nextInt(Building.gastronomy.size())).getRouteMap();
-
     }
 
     public void goBackHome() {
@@ -96,6 +98,9 @@ public class Person {
         var listOfPotentialMoves = list.stream().filter(c -> c.getValue().equals(list.get(0).getValue())).collect(Collectors.toList());
         String direction = listOfPotentialMoves.get(new Random().nextInt(listOfPotentialMoves.size())).getKey();
 
+        previousX = x;
+        previousY = y;
+
         switch (direction) {
             case "UP":
                 this.x--;
@@ -128,8 +133,6 @@ public class Person {
             default:
                 System.err.println("No direction");
         }
-
-
     }
 
     public synchronized void setRouteMap(int[][] routeMap) {
@@ -146,6 +149,14 @@ public class Person {
 
     public int getY() {
         return y;
+    }
+
+    public int getPreviousX() {
+        return previousX;
+    }
+
+    public int getPreviousY() {
+        return previousY;
     }
 
     public Building getWorkplace() {

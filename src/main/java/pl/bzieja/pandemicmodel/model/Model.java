@@ -22,23 +22,6 @@ public class Model {
         return map[x][y].isWalkable();
     }
 
-//    public Color getCellColor(int x, int y) {
-//
-//        //check if someone from workers is on that cell
-//        long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
-//
-//        if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
-//            return Building.PATH.getColor();
-//        } else if (passerbyCounter == 1) {
-//            return Building.WORKER.getColor();
-//        } else if (passerbyCounter > 1) {
-//            return Building.CROWD.getColor();
-//        } else {
-//            return map[x][y].getDefaultColor();
-//        }
-//    }
-
-
     public int getMapVerticalDimension() {
         return map.length;
     }
@@ -104,30 +87,6 @@ public class Model {
             p.setRouteMap(Building.BUILDING_INTERIOR.getRouteMap());
         });
     }
-
-//    public synchronized void actualizeColorOfCells() {
-//        Arrays.stream(map).flatMap(Stream::of).forEach(c -> {
-//            int x = c.getX();
-//            int y = c.getY();
-//
-//            long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
-//
-//            if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
-//
-//            } else if (passerbyCounter == 1) {
-//                c.setColor(Building.WORKER.getColor());
-//            } else if (passerbyCounter > 1) {
-//                c.setColor(Building.CROWD.getColor());
-//            } else {
-//                c.resetColorToDefault();
-//            }
-//
-//        });
-//    }
-
-//    public Color getCellColor(int i, int j) {
-//        return map[i][j].getColor();
-//    }
 
     public  Color getCellColor(int x, int y){
 

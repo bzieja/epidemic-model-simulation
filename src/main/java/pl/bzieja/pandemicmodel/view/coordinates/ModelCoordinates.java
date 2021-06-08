@@ -1,5 +1,6 @@
-package pl.bzieja.pandemicmodel.view;
+package pl.bzieja.pandemicmodel.view.coordinates;
 
+import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -27,6 +28,10 @@ public class ModelCoordinates {
         return Objects.hash(x, y);
     }
 
+    public int[] getCoordinates() {
+        return new int[] {x, y};
+    }
+
     public int getX() {
         return x;
     }
@@ -34,4 +39,5 @@ public class ModelCoordinates {
     public int getY() {
         return y;
     }
+
 }

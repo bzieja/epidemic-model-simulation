@@ -54,98 +54,71 @@ public class Presenter implements Initializable {
     }
 
     public synchronized void moveUp(ActionEvent actionEvent) {
-        canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveUp();
-        view.generateNewView();
     }
 
     public synchronized void moveLeft(ActionEvent actionEvent) {
-        canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveLeft();
-        view.generateNewView();
     }
 
     public synchronized void moveRight(ActionEvent actionEvent) {
-        canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveRight();
-        view.generateNewView();
     }
 
     public synchronized void moveDown(ActionEvent actionEvent) {
-        canvasID.getGraphicsContext2D().clearRect(0, 0, canvasID.getWidth(), canvasID.getHeight());
         view.moveDown();
-        view.generateNewView();
     }
 
     public synchronized void zoomIn(ActionEvent actionEvent) {
         view.zoomIn();
-        view.generateNewView();
     }
 
     public synchronized void zoomOut(ActionEvent actionEvent) {
         view.zoomOut();
-        view.generateNewView();
     }
 
-    public synchronized void goWork(ActionEvent actionEvent) {
-
+    public void goWork(ActionEvent actionEvent) {
         model.workersToWork();
-//        Disposable disposable = Observable
-//                .interval(1, 700, TimeUnit.MILLISECONDS)
-//                //.observeOn(Schedulers.computation())
-//                .doOnNext(tick -> {
-//                    model.moveWorkers();
-//                    model.workersGoAroundBuildingIfAreAtDestinationPoint();
-//                    model.actualizeColorOfCells();
-//                    Platform.runLater(() -> view.drawCells());
-//                });
-//                //.observeOn(JavaFxScheduler.platform())//javafx scheduler
-                //.sample(500, TimeUnit.MILLISECONDS)
-                //.subscribe(Platform.runLater(() -> view.drawCells()););
-        view.generateNewView();
-              Disposable disposable = Observable
-              .interval(1, 1000, TimeUnit.MILLISECONDS)
-              .forEach(t -> {
-                  model.moveWorkers();
-                  model.workersGoAroundBuildingIfAreAtDestinationPoint();
-                  Platform.runLater(() -> view.generateViewForWorkersOnly());
-                  //model.actualizeColorOfCells();
-                  //Platform.runLater(view::drawCells);
-              });
+        Disposable disposable = Observable
+                .interval(1, 300, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .doOnNext(tick -> {
+                    model.moveWorkers();
+                    model.workersGoAroundBuildingIfAreAtDestinationPoint();
+                })
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(t -> view.generateViewForWorkersOnly());
 
         stopButton.setOnAction(e -> disposable.dispose());
-//        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-//        ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(() -> {
-//            Platform.runLater(view::generateView);
-//            model.moveWorkers();
-//        }, 1, 2000, TimeUnit.MILLISECONDS);
-
-      //  stopButton.setOnAction(e -> future.cancel(true));
-
-
     }
 
     public void goLunch(ActionEvent actionEvent) {
 
         model.workersToLunch();
         Disposable disposable = Observable
-                .interval(1, 1000, TimeUnit.MILLISECONDS)
-                .forEach(t -> {
+                .interval(1, 300, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .doOnNext(tick -> {
                     model.moveWorkers();
                     model.workersGoAroundBuildingIfAreAtDestinationPoint();
-                    Platform.runLater(view::generateNewView);
-                });
+                })
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(t -> view.generateViewForWorkersOnly());
+
         stopButton.setOnAction(e -> disposable.dispose());
     }
+
 
     public void goBackHome(ActionEvent actionEvent) {
         model.workersGoBackHome();
         Disposable disposable = Observable
-                .interval(1, 600, TimeUnit.MILLISECONDS)
-                .forEach(t -> {
+                .interval(1, 300, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .doOnNext(tick -> {
                     model.moveWorkers();
-                    Platform.runLater(view::generateNewView);
-                });
+                })
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(t -> view.generateViewForWorkersOnly());
         stopButton.setOnAction(e -> disposable.dispose());
     }
 

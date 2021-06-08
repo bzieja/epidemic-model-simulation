@@ -5,151 +5,191 @@ import javafx.scene.canvas.GraphicsContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.Model;
-import pl.bzieja.pandemicmodel.model.cell.Building;
+import pl.bzieja.pandemicmodel.model.Person;
+import pl.bzieja.pandemicmodel.view.coordinates.ModelCoordinates;
+import pl.bzieja.pandemicmodel.view.coordinates.RelativeCoordinates;
 
 import java.awt.*;
-import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 @Component
 public class View {
     Model model;
     static Canvas canvasID;
     private double scaleFactor = 1;
-    private int xOfTheFirstCellToGenerate;
-    private int yOfTheFirstCellToGenerate;
-    private HashMap<ModelCoordinates, RelativeCoordinates> relativePositions;
+    private int xOfTheFirstModelCellToGenerate;
+    private int yOfTheFirstModelCellToGenerate;
+    private static final int LEFT_RIGHT_MOVE_FACTOR = 30;
+    private static final int UP_DOWN_MOVE_FACTOR = 12;
+    private static final int AGH_IMAGE_HEIGHT = 300;
+    private static final int AGH_IMAGE_WIDTH = 736;
 
-    //private List<CanvasCell> workerCellsToRedraw;
-
-    int cellsToGenerateAtX;
-    int cellsToGenerateAtY;
-    double cellXDimension;
-    double cellYDimension;
+    private final ConcurrentHashMap<ModelCoordinates, RelativeCoordinates> relativePositions;
+    private int numberOfCellsToGenerateByWidth;
+    private int numberOfCellsToGenerateByHeight;
+    private double cellWidth;
+    private double cellHeight;
 
     @Autowired
     public View(Model model) {
         this.model = model;
-        xOfTheFirstCellToGenerate = 0;
-        yOfTheFirstCellToGenerate = 0;
-        relativePositions = new HashMap<>();
-        //workerCellsToRedraw = new ArrayList<>();
+        xOfTheFirstModelCellToGenerate = 0;
+        yOfTheFirstModelCellToGenerate = 0;
+        relativePositions = new ConcurrentHashMap<>();
     }
 
     public synchronized void moveLeft() {
-        //resetWorkers();
-        if (xOfTheFirstCellToGenerate - 10 * scaleFactor < 0) {
-            xOfTheFirstCellToGenerate = 0;
+        if (yOfTheFirstModelCellToGenerate - LEFT_RIGHT_MOVE_FACTOR * scaleFactor < 0) {
+            yOfTheFirstModelCellToGenerate = 0;
         } else {
-            xOfTheFirstCellToGenerate -= 10 * scaleFactor;
+            yOfTheFirstModelCellToGenerate -= LEFT_RIGHT_MOVE_FACTOR * scaleFactor;
         }
         generateNewView();
     }
 
     public synchronized void moveRight() {
-        //resetWorkers();
-        xOfTheFirstCellToGenerate += 10 * scaleFactor;
+        if (yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth + LEFT_RIGHT_MOVE_FACTOR * scaleFactor > model.getMapHorizontalDimension()) {
+            yOfTheFirstModelCellToGenerate = model.getMapHorizontalDimension() - numberOfCellsToGenerateByWidth;
+        } else {
+            yOfTheFirstModelCellToGenerate += LEFT_RIGHT_MOVE_FACTOR * scaleFactor;
+        }
         generateNewView();
     }
 
     public synchronized void moveUp() {
-        //resetWorkers();
-        if (yOfTheFirstCellToGenerate - 7 * scaleFactor < 0) {
-            yOfTheFirstCellToGenerate = 0;
+        if (xOfTheFirstModelCellToGenerate - UP_DOWN_MOVE_FACTOR * scaleFactor < 0) {
+            xOfTheFirstModelCellToGenerate = 0;
         } else {
-            yOfTheFirstCellToGenerate -= 7 * scaleFactor;
+            xOfTheFirstModelCellToGenerate -= UP_DOWN_MOVE_FACTOR * scaleFactor;
         }
         generateNewView();
     }
 
     public synchronized void moveDown() {
-        //resetWorkers();
-        yOfTheFirstCellToGenerate += 7 * scaleFactor;
+        if (xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight + UP_DOWN_MOVE_FACTOR * scaleFactor > model.getMapVerticalDimension()) {
+            xOfTheFirstModelCellToGenerate = model.getMapVerticalDimension() - numberOfCellsToGenerateByHeight;
+        } else {
+            xOfTheFirstModelCellToGenerate += UP_DOWN_MOVE_FACTOR * scaleFactor;
+        }
         generateNewView();
     }
 
     public synchronized void zoomIn() {
-        //resetWorkers();
         scaleFactor += 0.75;
         generateNewView();
     }
 
     public synchronized void zoomOut() {
-        //resetWorkers();
         if (scaleFactor - 0.75 <= 1) {
             scaleFactor = 1;
-            xOfTheFirstCellToGenerate = 0;
-            yOfTheFirstCellToGenerate = 0;
+            xOfTheFirstModelCellToGenerate = 0;
+            yOfTheFirstModelCellToGenerate = 0;
         } else if (scaleFactor > 2) {
             scaleFactor -= 0.75;
         }
         generateNewView();
     }
 
-    public synchronized void generateNewView() {
+    private void clearViewData(GraphicsContext graphicsContext) {
         relativePositions.clear();
 
-        cellsToGenerateAtX = (int) Math.round(canvasID.getWidth() / scaleFactor);
-        cellsToGenerateAtY = (int) Math.round(canvasID.getHeight() / scaleFactor);
-
-        cellXDimension = canvasID.getWidth() / cellsToGenerateAtX;
-        cellYDimension = canvasID.getHeight() / cellsToGenerateAtY;
-
-        GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
-
-        for (int i = 0; i < cellsToGenerateAtY && i < model.getMapVerticalDimension(); i++) {
-            if (i + yOfTheFirstCellToGenerate >= model.getMapVerticalDimension()) {
-                continue;
-            }
-
-            for (int j = 0; j < cellsToGenerateAtX && j < model.getMapHorizontalDimension(); j++) {
-                if (j + xOfTheFirstCellToGenerate >= model.getMapHorizontalDimension()) {
-                    continue;
-                }
-
-                graphicsContext.beginPath();
-                Color color = model.getCellColor(i + yOfTheFirstCellToGenerate, j + xOfTheFirstCellToGenerate);
-
-//                if (color.equals(Building.WORKER.getColor())) {
-//                    workerCellsToRedraw.add(new CanvasCell(i, j));
-//                }
-
-                int r = color.getRed();
-                int g = color.getGreen();
-                int b = color.getBlue();
-                int a = color.getAlpha();
-                double opacity = a / 255.0;
-                graphicsContext.setFill(javafx.scene.paint.Color.rgb(r, g, b, opacity));
-
-                //if (Building.walkable.stream().anyMatch(q -> q.getColor().equals(color))) {
-                    relativePositions.put(new ModelCoordinates(i + yOfTheFirstCellToGenerate, j + xOfTheFirstCellToGenerate), new RelativeCoordinates(j * cellYDimension, i * cellXDimension));
-                //}
-                graphicsContext.rect(j * cellYDimension, i * cellXDimension, cellYDimension, cellXDimension);
-                graphicsContext.fill();
-
-                //bindedCells.add(new CanvasCell(i, j, cellXDimension, cellYDimension, model.getCellByCoordinates(i + yOfTheFirstCellToGenerate, j + xOfTheFirstCellToGenerate).getColorProperty()));
-            }
-        }
+        graphicsContext.beginPath();
+        graphicsContext.setFill(javafx.scene.paint.Color.rgb(Color.WHITE.getRed(), Color.WHITE.getGreen(), Color.WHITE.getBlue(), Color.WHITE.getAlpha() / 255.0));
+        graphicsContext.fillRect(0,0, canvasID.getWidth(), canvasID.getHeight());
     }
 
-    public synchronized void generateViewForWorkersOnly() {
+    public void generateNewView() {
+        numberOfCellsToGenerateByWidth = (int) Math.round(AGH_IMAGE_WIDTH / scaleFactor);
+        numberOfCellsToGenerateByHeight = (int) Math.round(AGH_IMAGE_HEIGHT / scaleFactor);
+
+        cellWidth = canvasID.getWidth() / numberOfCellsToGenerateByWidth;
+        cellHeight = canvasID.getHeight() / numberOfCellsToGenerateByHeight;
+
+        GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
+        clearViewData(graphicsContext);
+        int xOfCurrentModelCell = xOfTheFirstModelCellToGenerate;
+        int yOfCurrentModelCell = yOfTheFirstModelCellToGenerate;
+        for (int i = 0; i < numberOfCellsToGenerateByHeight; i++, xOfCurrentModelCell++) {
+            yOfCurrentModelCell = yOfTheFirstModelCellToGenerate;
+
+            for (int j = 0; j < numberOfCellsToGenerateByWidth; j++, yOfCurrentModelCell++) {
+
+                Color color = model.getCellByCoordinates(xOfCurrentModelCell, yOfCurrentModelCell).getDefaultColor();
+                graphicsContext.beginPath();
+                graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
+                //canvas coordinates needed
+                graphicsContext.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+
+                relativePositions.put(new ModelCoordinates(xOfCurrentModelCell, yOfCurrentModelCell), new RelativeCoordinates(j * cellWidth, i * cellHeight));
+            }
+        }
+        generateViewForWorkersOnly();
+    }
+
+    public void generateViewForWorkersOnly() {
         GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
 
-        model.getWorkers().stream().filter(w -> (w.getX() >= xOfTheFirstCellToGenerate && w.getX() < (xOfTheFirstCellToGenerate + cellsToGenerateAtY)
-        && (w.getY() >= yOfTheFirstCellToGenerate && w.getY() < (yOfTheFirstCellToGenerate + cellsToGenerateAtX))))
+        Predicate<Person> shouldBePersonGenerated = new Predicate<Person>() {
+            @Override
+            public boolean test(Person person) {
+                int x = person.getX();
+                int y = person.getY();
+                int maxX = xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight;
+                int maxY = yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth;
+                if (((x > xOfTheFirstModelCellToGenerate) && (x < maxX))
+                        && ((y > yOfTheFirstModelCellToGenerate) && (y < maxY))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+
+        model.getWorkers().stream().filter(shouldBePersonGenerated)
                 .forEach((w) -> {
-                    Color color = model.getCellColor(w.getX(), w.getY());
-                    int r = color.getRed();
-                    int g = color.getGreen();
-                    int b = color.getBlue();
-                    int a = color.getAlpha();
-                    double opacity = a / 255.0;
+                    var color = model.getCellColor(w.getX(), w.getY());
+                    var defaultColor = model.getCellByCoordinates(w.getX(), w.getY()).getDefaultColor();
+                    graphicsContext.beginPath();
+                    graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
+                    double[] coords = relativePositions.getOrDefault(new ModelCoordinates(w.getX(), w.getY()), new RelativeCoordinates(0, 0)).getCoordinates();
+                    graphicsContext.fillRect(coords[0], coords[1], cellHeight, cellWidth);
+                });
+        clearPreviousPositionsOfWorkers();
+    }
+
+    private void clearPreviousPositionsOfWorkers() {
+        GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
+
+        Predicate<Person> shouldBeLastPersonCoordinatesRedraw = new Predicate<Person>() {
+            @Override
+            public boolean test(Person person) {
+                int x = person.getPreviousX();
+                int y = person.getPreviousY();
+                int maxX = xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight;
+                int maxY = yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth;
+                if (((x > xOfTheFirstModelCellToGenerate) && (x < maxX))
+                        && ((y > yOfTheFirstModelCellToGenerate) && (y < maxY))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+
+        model.getWorkers().stream().filter(shouldBeLastPersonCoordinatesRedraw)
+                .forEach((w) -> {
+                    double[] coords = relativePositions.get(new ModelCoordinates(w.getPreviousX(), w.getPreviousY())).getCoordinates();
+
+                    Color color = model.getCellColor(w.getPreviousX(), w.getPreviousY());
+                    graphicsContext.beginPath();
+                    graphicsContext.setFill(convertAwtColorToJavaFxColor(Color.WHITE));
+                    graphicsContext.fillRect(coords[0], coords[1], cellHeight, cellWidth);
 
                     graphicsContext.beginPath();
-                    graphicsContext.setFill(javafx.scene.paint.Color.rgb(r, g, b, opacity));
-                    double[] coords = relativePositions.get(new ModelCoordinates(w.getX(), w.getY())).getCoordinates();
-                    graphicsContext.rect(coords[0], coords[1], cellYDimension, cellXDimension);
-                    graphicsContext.fill();
-                    System.out.println("Worker is moving!");
+                    graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
+                    graphicsContext.fillRect(coords[0], coords[1], cellHeight, cellWidth);
+
                 });
     }
 
@@ -157,26 +197,12 @@ public class View {
         this.canvasID = canvas;
     }
 
-    private synchronized void resetWorkers() {
-//        workerCells.forEach(c -> {
-//            c.removeListener();
-//            c.color.unbind();
-//        });
-        //workerCellsToRedraw.clear();
-    }
-
-    //javafx.scene.paint.Color color, int i, int j, double cellXDimension, double cellYDimension
-
-    public static void draw(javafx.scene.paint.Color color, int i, int j, double cellXDimension, double cellYDimension) {
-        GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
-        graphicsContext.beginPath();
-        graphicsContext.setFill(color);
-
-        graphicsContext.rect(j * cellYDimension, i * cellXDimension, cellYDimension, cellXDimension);
-        graphicsContext.fill();
-    }
-
-    public static Canvas getCanvasID() {
-        return canvasID;
+    private javafx.scene.paint.Color convertAwtColorToJavaFxColor(Color awtColor) {
+        int r = awtColor.getRed() ;
+        int g = awtColor.getGreen();
+        int b = awtColor.getBlue();
+        int a = awtColor.getAlpha();
+        double opacity = a / 255.0;
+        return new javafx.scene.paint.Color(r / 255.0, g / 255.0 , b / 255.0, opacity);
     }
 }

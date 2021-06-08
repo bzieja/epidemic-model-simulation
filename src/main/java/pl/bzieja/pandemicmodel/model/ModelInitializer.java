@@ -68,19 +68,7 @@ public class ModelInitializer {
      * Create routes only for this buildings which could be destination place for workers
      */
     private void createRouteTraces() {
-
         Building.buildings.forEach(b -> b.setRouteMap(findTheShortestPathToGivenPlaces(model.getAllCellsCoordinatesByColor(b.getColor()))));
-
-//        for (Building building : Building.values()) {
-//            if (Building.buildings.stream().anyMatch(b -> building == b)) {
-//
-//                List<Cell> destinationCells = model.getAllCellsCoordinatesByColor(building.getColor());
-//                int[][] route = findTheShortestPathToGivenPlaces(destinationCells);
-//
-//                saveMatrixToTxt(route);
-//                building.setRouteMap(route);
-//            }
-//        }
     }
 
     /**
@@ -163,7 +151,6 @@ public class ModelInitializer {
             }
 
         }
-
         return route;
     }
 

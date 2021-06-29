@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.Model;
-import pl.bzieja.pandemicmodel.model.Person;
+import pl.bzieja.pandemicmodel.model.person.Person;
 import pl.bzieja.pandemicmodel.view.coordinates.ModelCoordinates;
 import pl.bzieja.pandemicmodel.view.coordinates.RelativeCoordinates;
 
@@ -125,6 +125,33 @@ public class View {
             }
         }
         generateViewForWorkersOnly();
+    }
+
+    public void generateRawViewMap() {
+        numberOfCellsToGenerateByWidth = (int) Math.round(AGH_IMAGE_WIDTH / scaleFactor);
+        numberOfCellsToGenerateByHeight = (int) Math.round(AGH_IMAGE_HEIGHT / scaleFactor);
+
+        cellWidth = canvasID.getWidth() / numberOfCellsToGenerateByWidth;
+        cellHeight = canvasID.getHeight() / numberOfCellsToGenerateByHeight;
+
+        GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
+        clearViewData(graphicsContext);
+        int xOfCurrentModelCell = xOfTheFirstModelCellToGenerate;
+        int yOfCurrentModelCell = yOfTheFirstModelCellToGenerate;
+        for (int i = 0; i < numberOfCellsToGenerateByHeight; i++, xOfCurrentModelCell++) {
+            yOfCurrentModelCell = yOfTheFirstModelCellToGenerate;
+
+            for (int j = 0; j < numberOfCellsToGenerateByWidth; j++, yOfCurrentModelCell++) {
+
+                Color color = model.getCellByCoordinates(xOfCurrentModelCell, yOfCurrentModelCell).getDefaultColor();
+                graphicsContext.beginPath();
+                graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
+                //canvas coordinates needed
+                graphicsContext.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+
+                relativePositions.put(new ModelCoordinates(xOfCurrentModelCell, yOfCurrentModelCell), new RelativeCoordinates(j * cellWidth, i * cellHeight));
+            }
+        }
     }
 
     public void generateViewForWorkersOnly() {

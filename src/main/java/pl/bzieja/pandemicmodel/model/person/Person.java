@@ -1,4 +1,4 @@
-package pl.bzieja.pandemicmodel.model;
+package pl.bzieja.pandemicmodel.model.person;
 
 import pl.bzieja.pandemicmodel.model.cell.Building;
 import pl.bzieja.pandemicmodel.model.cell.Cell;
@@ -15,7 +15,8 @@ public class Person {
     private int y;
     private final Building workplace;
     List<Cell> destinationCells;
-    //isActive ?
+    private HealthState healthState;
+    private Building currentDestinationBuilding;
 
     public Person(int[] coordinates, Building workplace, List<Cell> destinationCells) {
         this.x = coordinates[0];
@@ -24,6 +25,8 @@ public class Person {
         previousY = coordinates[1];
         this.workplace = workplace;
         this.destinationCells = destinationCells;
+        this.currentDestinationBuilding = null;
+        this.healthState = HealthState.HEALTHY;
     }
 
     public boolean isAtTheDestinationPoint() {
@@ -161,5 +164,21 @@ public class Person {
 
     public Building getWorkplace() {
         return workplace;
+    }
+
+    public HealthState getHealthState() {
+        return healthState;
+    }
+
+    public void setCurrentDestinationBuilding(Building building) {
+        this.currentDestinationBuilding = building;
+    }
+
+    public Building getCurrentDestinationBuilding() {
+        return currentDestinationBuilding;
+    }
+
+    public int[][] getRouteMap() {
+        return routeMap;
     }
 }

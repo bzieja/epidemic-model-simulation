@@ -3,6 +3,7 @@ package pl.bzieja.pandemicmodel.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.cell.*;
+import pl.bzieja.pandemicmodel.model.person.Person;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="anchorPaneID" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="1130.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.bzieja.pandemicmodel.presenter.Presenter">
    <children>
@@ -12,17 +13,28 @@
       <Button fx:id="leftButton" layoutX="14.0" layoutY="516.0" mnemonicParsing="false" onAction="#moveLeft" prefHeight="25.0" prefWidth="52.0" text="Left" />
       <Button fx:id="rightButton" layoutX="125.0" layoutY="517.0" mnemonicParsing="false" onAction="#moveRight" prefHeight="25.0" prefWidth="52.0" text="Right" />
       <Button fx:id="downButton" layoutX="73.0" layoutY="549.0" mnemonicParsing="false" onAction="#moveDown" prefHeight="25.0" prefWidth="52.0" text="Down" />
-      <Button fx:id="zoomInButton" layoutX="209.0" layoutY="504.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="25.0" prefWidth="87.0" text="Zoom in \ +" />
-      <Button fx:id="zoomOutButton" layoutX="209.0" layoutY="538.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="25.0" prefWidth="87.0" text="Zoom out \ -" />
-      <Button fx:id="goWorkButton" layoutX="332.0" layoutY="489.0" mnemonicParsing="false" onAction="#goWork" prefHeight="31.0" prefWidth="101.0" text="Go Work" />
-      <Button fx:id="stopButton" layoutX="244.0" layoutY="580.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="25.0" prefWidth="52.0" text="Stop" />
-      <Button fx:id="goLunchButton" layoutX="332.0" layoutY="534.0" mnemonicParsing="false" onAction="#goLunch" text="Lunch event" />
-      <Button fx:id="goBackHomeButton" layoutX="332.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBackHome" prefHeight="31.0" prefWidth="101.0" text="Go back home" />
+      <Button fx:id="zoomInButton" layoutX="209.0" layoutY="492.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="43.0" prefWidth="111.0" text="Zoom in \ +" />
+      <Button fx:id="zoomOutButton" layoutX="209.0" layoutY="544.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="43.0" prefWidth="111.0" text="Zoom out \ -" />
+      <Button fx:id="goWorkButton" layoutX="996.0" layoutY="481.0" mnemonicParsing="false" onAction="#goWork" prefHeight="31.0" prefWidth="101.0" text="Go Work" />
+      <Button fx:id="stopButton" layoutX="920.0" layoutY="565.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="31.0" prefWidth="61.0" text="Stop" />
+      <Button fx:id="goLunchButton" layoutX="996.0" layoutY="517.0" mnemonicParsing="false" onAction="#goLunch" text="Lunch event" />
+      <Button fx:id="goBackHomeButton" layoutX="996.0" layoutY="565.0" mnemonicParsing="false" onAction="#goBackHome" prefHeight="31.0" prefWidth="101.0" text="Go back home" />
       <Canvas fx:id="canvasID" height="450.0" layoutX="14.0" layoutY="14.0" width="1104.0" />
-      <Label fx:id="timerID" alignment="CENTER" contentDisplay="CENTER" layoutX="458.0" layoutY="483.0" prefHeight="43.0" prefWidth="101.0" text="Label">
+      <Label fx:id="timerLabelID" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="320.0" layoutY="514.0" prefHeight="43.0" prefWidth="135.0" text="07:00:00">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
+      <Button fx:id="startSimulationButton" layoutX="516.0" layoutY="481.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="31.0" prefWidth="157.0" text="Start simulation" />
+      <Label fx:id="dayLabelID" alignment="CENTER" layoutX="416.0" layoutY="475.0" prefHeight="43.0" prefWidth="39.0" text="1">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Label>
+      <Text layoutX="345.0" layoutY="507.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day" textAlignment="CENTER" wrappingWidth="60.99998503923416">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

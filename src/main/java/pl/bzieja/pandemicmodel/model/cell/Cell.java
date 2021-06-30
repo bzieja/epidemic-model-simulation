@@ -50,4 +50,13 @@ public class Cell {
         return Objects.hash(x, y);
     }
 
+    @Override
+    public String toString() {
+        return "\nCell{" +
+                "walkable=" + walkable +
+                ", defaultColor=" + defaultColor +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

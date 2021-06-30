@@ -176,7 +176,7 @@ public class View {
         model.getWorkers().stream().filter(shouldBePersonGenerated)
                 .forEach((w) -> {
                     var color = model.getCellColor(w.getX(), w.getY());
-                    var defaultColor = model.getCellByCoordinates(w.getX(), w.getY()).getDefaultColor();
+                    //var defaultColor = model.getCellByCoordinates(w.getX(), w.getY()).getDefaultColor();
                     graphicsContext.beginPath();
                     graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
                     double[] coords = relativePositions.getOrDefault(new ModelCoordinates(w.getX(), w.getY()), new RelativeCoordinates(0, 0)).getCoordinates();

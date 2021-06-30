@@ -29,13 +29,14 @@ public class TheEndOfTheDayEvent extends Event {
         long numberOfPeopleWhichGoesBackFromWorkInThisTour = totalNumberOfWorkersWhichShouldGoBackFromWork / AppConfig.NUMBER_OF_GROUPS_GOING_BACK_HOME;
 
         List<Person> persons = workers.stream()
-                .filter(w -> HealthState.workable.contains(w.getHealthState()))
+                .filter(w -> HealthState.workable.contains(w.getHealthState()) && w.getCurrentDestinationBuilding() != Building.SPAWN)
                 .collect(Collectors.toList());
         Collections.shuffle(persons);
 
         persons.stream()
                 .limit(numberOfPeopleWhichGoesBackFromWorkInThisTour)
                 .forEach(p -> {
+                    //p.setDestinationCells(model.getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));  //???
                     p.setDestinationCells(model.getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));  //???
                     p.setCurrentDestinationBuilding(Building.SPAWN);
                     p.setRouteMap(Building.SPAWN.getRouteMap());

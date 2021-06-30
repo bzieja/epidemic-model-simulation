@@ -52,6 +52,11 @@ public class ModelInitializer {
 
         createRouteTraces();
         createWorkers();
+        assignCellsToBuildings();
+    }
+
+    private void assignCellsToBuildings() {
+        Building.buildings.forEach(b -> b.setCellsWhichBelongsToGivenBuilding(model.getAllCellsCoordinatesByColor(b.getColor())));
     }
 
     private void createWorkers() {
@@ -74,10 +79,10 @@ public class ModelInitializer {
 
     /**
      * Computes the route for given places. There are cases:
-     * -1 if Cell is not walkable for human (human could walk only on non-negative values of route)
+     * Integer.MAX_VALUE if Cell is not walkable for human
      * 0 for Cells which are walkable and hasn't been visited by algorithm for some reason (e.g. Cell couldn't be reached)
      * >0 distance to the source where 1 means that we are at the destination point
-     * @param places palces to which we want compute trace
+     * @param places places to which we want compute trace
      * @return
      */
     private int[][] findTheShortestPathToGivenPlaces(List<Cell> places) {
@@ -152,6 +157,7 @@ public class ModelInitializer {
             }
 
         }
+
         return route;
     }
 

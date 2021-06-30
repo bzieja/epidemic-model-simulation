@@ -113,17 +113,37 @@ public class Model {
         workers.stream().filter(Person::isAtTheDestinationPoint).forEach(p -> {
             p.setRouteMap(Building.BUILDING_INTERIOR.getRouteMap());
         });
+
+//        workers.stream().filter(p -> p.isAtTheDestinationPoint() && p.getCurrentDestinationBuilding() != Building.SPAWN).forEach(p -> {
+//            p.setRouteMap(Building.BUILDING_INTERIOR.getRouteMap());
+//        });
     }
 
     public  Color getCellColor(int x, int y){
 
         //check if someone from workers is on that cell
-        long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
+        //long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
+        List<Person> persons = workers.stream().filter(p -> p.getX() == x && p.getY() == y).collect(Collectors.toList());
+        long passerbyCounter = persons.size();
 
         if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
             return Building.PATH.getColor();
         } else if (passerbyCounter == 1) {
-            return Building.WORKER.getColor();
+            //health color logic
+            //var healthState = workers.stream().filter(p -> p.getX() == x && p.getY() == y).limit(1).collect(Collectors.toList()).get(0).getHealthState();
+            HealthState healthState = persons.get(0).getHealthState();
+            if (healthState.equals(HealthState.SYMPTOMATICALLY_ILL)) {
+                return HealthState.SYMPTOMATICALLY_ILL.getColor();
+            } else if (healthState.equals(HealthState.ASYMPTOMATICALLY_ILL)) {
+                return HealthState.ASYMPTOMATICALLY_ILL.getColor();
+            } else if (healthState.equals(HealthState.QUARANTINED)) {
+                return HealthState.QUARANTINED.getColor();
+            } else if (healthState.equals(HealthState.CONVALESCENT)) {
+                return HealthState.CONVALESCENT.getColor();
+            } else {
+                return HealthState.HEALTHY.getColor();
+            }
+            //return Building.WORKER.getColor();
         } else if (passerbyCounter > 1) {
             return Building.CROWD.getColor();
         } else {

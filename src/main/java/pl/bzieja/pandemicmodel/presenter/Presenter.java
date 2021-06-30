@@ -21,6 +21,7 @@ import pl.bzieja.pandemicmodel.model.Model;
 import pl.bzieja.pandemicmodel.model.ModelInitializer;
 import pl.bzieja.pandemicmodel.model.events.Event;
 import pl.bzieja.pandemicmodel.model.events.EventContainer;
+import pl.bzieja.pandemicmodel.model.person.InfectionManager;
 import pl.bzieja.pandemicmodel.view.View;
 
 import javafx.scene.input.MouseEvent;
@@ -40,18 +41,25 @@ public class Presenter implements Initializable {
     @FXML public Label timerLabelID;
     public Button startSimulationButton;
     public Label dayLabelID;
+    public Label healthyLabelID;
+    public Label asymptomaticallyIllLabelID;
+    public Label quarantinedLabelID;
+    public Label convalescentLabelID;
+    public Label symptomaticallyIllLabelID;
     EventHandler<MouseEvent> loadImageEvent;
     Model model;
     ModelInitializer modelInitializer;
     View view;
     EventContainer eventContainer;
+    InfectionManager infectionManager;
 
     @Autowired
-    public Presenter(Model model, View view, ModelInitializer modelInitializer, EventContainer eventContainer) {
+    public Presenter(Model model, View view, ModelInitializer modelInitializer, EventContainer eventContainer, InfectionManager infectionManager) {
         this.model = model;
         this.view = view;
         this.modelInitializer = modelInitializer;
         this.eventContainer = eventContainer;
+        this.infectionManager = infectionManager;
     }
 
     @Override
@@ -146,12 +154,18 @@ public class Presenter implements Initializable {
 
         setMorningOnTheClock();
         addEventListenersToClock();
+        //bindCounters();
+        addCounterListeners();
+        infectionManager.infectPatientsZero();
+
+
         Disposable disposable = Observable
                 .interval(1, AppConfig.ITERATION_TIME, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext(tick -> {
                     model.moveWorkers();
                     model.workersGoAroundBuildingIfAreAtDestinationPoint();
+                    infectionManager.turnRoutine();
                 })
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(t -> {
@@ -161,6 +175,23 @@ public class Presenter implements Initializable {
 
         stopButton.setOnAction(e -> disposable.dispose());
 
+    }
+
+    private void addCounterListeners() {
+        infectionManager.numberOfHealthWorkersProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> healthyLabelID.setText(String.valueOf(t1))));
+        infectionManager.numberOfSymptomaticallyIllProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> symptomaticallyIllLabelID.setText(String.valueOf(t1))));
+        infectionManager.numberOfAsymptomaticallyIllProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> asymptomaticallyIllLabelID.setText(String.valueOf(t1))));
+        infectionManager.numberOfQuarantinedProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> quarantinedLabelID.setText(String.valueOf(t1))));
+        infectionManager.numberOfConvalescentProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> convalescentLabelID.setText(String.valueOf(t1))));
+    }
+
+
+    private void bindCounters() {
+        healthyLabelID.textProperty().bind(infectionManager.numberOfHealthWorkersProperty().asString());
+        symptomaticallyIllLabelID.textProperty().bind(infectionManager.numberOfSymptomaticallyIllProperty().asString());
+        asymptomaticallyIllLabelID.textProperty().bind(infectionManager.numberOfAsymptomaticallyIllProperty().asString());
+        quarantinedLabelID.textProperty().bind(infectionManager.numberOfQuarantinedProperty().asString());
+        convalescentLabelID.textProperty().bind(infectionManager.numberOfConvalescentProperty().asString());
     }
 
     private void addEventListenersToClock() {
@@ -178,28 +209,6 @@ public class Presenter implements Initializable {
         });
 }
 
-//    private void addMorningRoutineListener() {
-//
-//        int minuteOfEvent = 50 / AppConfig.NUMBER_OF_GROUPS_GOING_TO_WORK;
-//
-//        for (int i = 1; i <= AppConfig.NUMBER_OF_GROUPS_GOING_TO_WORK; i++) {
-//            String minuteOfEventAsString = (i * minuteOfEvent) < 10 ? "0" + (i * minuteOfEvent) : String.valueOf((i * minuteOfEvent));
-//            String eventTime = "07:" + minuteOfEventAsString + ":00";
-//            System.out.println("eventTime = " + eventTime);
-//
-//            timerLabelID.textProperty().addListener(new ChangeListener<String>() {
-//                @Override
-//                public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-//                    if (newValue.equals(eventTime)) {
-//                        model.sendPartOfWorkersToWork();
-//                        //Platform.runLater(view::generateNewView);
-//                        System.out.println("Part of workers is going to work! Time: " + newValue);
-//                    }
-//                }
-//            });
-//        }
-//    }
-
     public void setMorningOnTheClock() {
         var lt = LocalTime.of(7,0,0);
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -210,10 +219,11 @@ public class Presenter implements Initializable {
         String dataAsString = timerLabelID.getText();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
         var lt = LocalTime.parse(dataAsString, format);
+        timerLabelID.setText(lt.plusSeconds(AppConfig.TIME_STEP_IN_SIMULATION_CLOCK).format(format));
         if (lt.equals(LocalTime.parse("18:00:00", format))) {
             increaseDayNumber();
+            setMorningOnTheClock();
         }
-        timerLabelID.setText(lt.plusSeconds(AppConfig.TIME_STEP_IN_SIMULATION_CLOCK).format(format));
     }
 
     private void increaseDayNumber() {

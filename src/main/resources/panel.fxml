@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPaneID" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="1130.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.bzieja.pandemicmodel.presenter.Presenter">
+<AnchorPane fx:id="anchorPaneID" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="1298.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.bzieja.pandemicmodel.presenter.Presenter">
    <children>
       <Button fx:id="upButton" layoutX="73.0" layoutY="481.0" mnemonicParsing="false" onAction="#moveUp" prefHeight="25.0" prefWidth="52.0" text="Up" />
       <Button fx:id="leftButton" layoutX="14.0" layoutY="516.0" mnemonicParsing="false" onAction="#moveLeft" prefHeight="25.0" prefWidth="52.0" text="Left" />
@@ -15,26 +15,36 @@
       <Button fx:id="downButton" layoutX="73.0" layoutY="549.0" mnemonicParsing="false" onAction="#moveDown" prefHeight="25.0" prefWidth="52.0" text="Down" />
       <Button fx:id="zoomInButton" layoutX="209.0" layoutY="492.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="43.0" prefWidth="111.0" text="Zoom in \ +" />
       <Button fx:id="zoomOutButton" layoutX="209.0" layoutY="544.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="43.0" prefWidth="111.0" text="Zoom out \ -" />
-      <Button fx:id="goWorkButton" layoutX="996.0" layoutY="481.0" mnemonicParsing="false" onAction="#goWork" prefHeight="31.0" prefWidth="101.0" text="Go Work" />
-      <Button fx:id="stopButton" layoutX="920.0" layoutY="565.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="31.0" prefWidth="61.0" text="Stop" />
-      <Button fx:id="goLunchButton" layoutX="996.0" layoutY="517.0" mnemonicParsing="false" onAction="#goLunch" text="Lunch event" />
-      <Button fx:id="goBackHomeButton" layoutX="996.0" layoutY="565.0" mnemonicParsing="false" onAction="#goBackHome" prefHeight="31.0" prefWidth="101.0" text="Go back home" />
+      <Button fx:id="goWorkButton" layoutX="1171.0" layoutY="487.0" mnemonicParsing="false" onAction="#goWork" prefHeight="31.0" prefWidth="101.0" text="Go Work" />
+      <Button fx:id="stopButton" layoutX="1095.0" layoutY="571.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="31.0" prefWidth="61.0" text="Stop" />
+      <Button fx:id="goLunchButton" layoutX="1171.0" layoutY="523.0" mnemonicParsing="false" onAction="#goLunch" text="Lunch event" />
+      <Button fx:id="goBackHomeButton" layoutX="1171.0" layoutY="571.0" mnemonicParsing="false" onAction="#goBackHome" prefHeight="31.0" prefWidth="101.0" text="Go back home" />
       <Canvas fx:id="canvasID" height="450.0" layoutX="14.0" layoutY="14.0" width="1104.0" />
       <Label fx:id="timerLabelID" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="320.0" layoutY="514.0" prefHeight="43.0" prefWidth="135.0" text="07:00:00">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
-      <Button fx:id="startSimulationButton" layoutX="516.0" layoutY="481.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="31.0" prefWidth="157.0" text="Start simulation" />
-      <Label fx:id="dayLabelID" alignment="CENTER" layoutX="416.0" layoutY="475.0" prefHeight="43.0" prefWidth="39.0" text="1">
+      <Button fx:id="startSimulationButton" layoutX="516.0" layoutY="481.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="31.0" prefWidth="157.0" text="Start" />
+      <Label fx:id="dayLabelID" alignment="CENTER" layoutX="426.0" layoutY="475.0" prefHeight="43.0" prefWidth="39.0" text="1">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
-      <Text layoutX="345.0" layoutY="507.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day" textAlignment="CENTER" wrappingWidth="60.99998503923416">
+      <Text layoutX="349.0" layoutY="506.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dzień" textAlignment="CENTER" wrappingWidth="76.62600284814835">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Text>
+      <Text layoutX="1131.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zdrowi" wrappingWidth="51.99999225139618" />
+      <Text layoutX="1131.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chorzy" />
+      <Text layoutX="1131.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chorzy bez." />
+      <Text layoutX="1131.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Na kwarantannie" />
+      <Text layoutX="1131.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ozdrowieńcy" />
+      <Label fx:id="healthyLabelID" layoutX="1249.0" layoutY="14.0" text="0" />
+      <Label fx:id="symptomaticallyIllLabelID" layoutX="1249.0" layoutY="47.0" text="0" />
+      <Label fx:id="asymptomaticallyIllLabelID" layoutX="1249.0" layoutY="84.0" text="0" />
+      <Label fx:id="quarantinedLabelID" layoutX="1249.0" layoutY="120.0" text="0" />
+      <Label fx:id="convalescentLabelID" layoutX="1249.0" layoutY="153.0" text="0" />
    </children>
 </AnchorPane>

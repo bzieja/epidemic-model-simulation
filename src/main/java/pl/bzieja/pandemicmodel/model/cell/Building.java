@@ -1,6 +1,7 @@
 package pl.bzieja.pandemicmodel.model.cell;
 
 import java.awt.*;
+import java.util.List;
 import java.util.EnumSet;
 
 public enum Building {
@@ -70,6 +71,7 @@ public enum Building {
     private final int numberOfWorkers;
     private final Color color;
     private int[][] routeMap;
+    private List<Cell> cellsWhichBelongsToGivenBuilding;
 
     Building(int numberOfWorkers, Color color) {
         this.numberOfWorkers = numberOfWorkers;
@@ -90,5 +92,13 @@ public enum Building {
 
     public int[][] getRouteMap() {
         return routeMap;
+    }
+
+    public void setCellsWhichBelongsToGivenBuilding(List<Cell> cellsWhichBelongsToGivenBuilding) {
+        this.cellsWhichBelongsToGivenBuilding = cellsWhichBelongsToGivenBuilding;
+    }
+
+    public List<Cell> getCellsWhichBelongsToGivenBuilding() {
+        return cellsWhichBelongsToGivenBuilding;
     }
 }

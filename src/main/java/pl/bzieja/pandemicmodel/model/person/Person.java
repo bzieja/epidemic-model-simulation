@@ -16,6 +16,7 @@ public class Person {
     private final Building workplace;
     List<Cell> destinationCells;
     private HealthState healthState;
+    private InteractionState interactionState;
     private Building currentDestinationBuilding;
 
     public Person(int[] coordinates, Building workplace, List<Cell> destinationCells) {
@@ -25,12 +26,18 @@ public class Person {
         previousY = coordinates[1];
         this.workplace = workplace;
         this.destinationCells = destinationCells;
-        this.currentDestinationBuilding = null;
+        this.currentDestinationBuilding = Building.SPAWN;
         this.healthState = HealthState.HEALTHY;
+        this.interactionState = new InteractionState();
     }
 
     public boolean isAtTheDestinationPoint() {
-        return destinationCells.stream().anyMatch(c -> c.getX() == x && c.getY() == y);
+        //return destinationCells.stream().anyMatch(c -> c.getX() == x && c.getY() == y);
+         if (currentDestinationBuilding.equals(Building.SPAWN)) {
+             return false;
+        } else {
+             return currentDestinationBuilding.getCellsWhichBelongsToGivenBuilding().contains(new Cell(x, y, false, null));
+        }
     }
 
     public void goToWorkplace() {
@@ -180,5 +187,17 @@ public class Person {
 
     public int[][] getRouteMap() {
         return routeMap;
+    }
+
+    public InteractionState getInteractionState() {
+        return interactionState;
+    }
+
+    public double calculateDistanceToAnotherPerson(Person person) {
+        return Math.sqrt((person.getY() - y) * (person.getY() - y) + (person.getX() - x) * (person.getX() - x));
+    }
+
+    public void setHealthState(HealthState healthState) {
+        this.healthState = healthState;
     }
 }

@@ -23,4 +23,16 @@ public class InteractionState {
     public double getProbabilityOfBeingInfected() {
         return probabilityOfBeingInfected;
     }
+
+    public int getDaysInSpecialState() {
+        return daysInSpecialState;
+    }
+
+    public void increaseNumberOfDaysInSpecialState() {
+        daysInSpecialState++;
+    }
+
+    public void resetNumberOfDaysInSpecialState(){
+        daysInSpecialState = 0;
+    }
 }

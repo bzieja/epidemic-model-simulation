@@ -9,7 +9,7 @@ import java.util.EnumSet;
  * @author Bartłomiej Zieja
  */
 public enum HealthState {
-    HEALTHY(0, new Color(Integer.parseInt("093ad7", 16))),
+    HEALTHY(-1, new Color(Integer.parseInt("093ad7", 16))),
     SYMPTOMATICALLY_ILL(AppConfig.TIME_OF_THE_DISEASE, new Color(Integer.parseInt("19b338", 16))),
     ASYMPTOMATICALLY_ILL(AppConfig.TIME_OF_THE_DISEASE, new Color(Integer.parseInt("a0c217", 16))),
     QUARANTINED(AppConfig.TIME_OF_THE_QUARANTINE, new Color(Integer.parseInt("b5622f", 16))),
@@ -32,12 +32,7 @@ public enum HealthState {
         return color;
     }
 
-//
-//    public void decreaseIllDayByOne(){
-//        this.durationTimeOfSpecialStateInDays--;
-//    }
-//
-//    public int getDurationTimeOfSpecialStateInDays() {
-//        return durationTimeOfSpecialStateInDays;
-//    }
+    public int getDurationTimeOfSpecialStateInDays() {
+        return durationTimeOfSpecialStateInDays;
+    }
 }

@@ -209,6 +209,7 @@ public class Person {
 
     public void setHealthState(HealthState healthState) {
         this.healthState = healthState;
+        this.interactionState.resetNumberOfDaysInSpecialState();
     }
 
     public List<Cell> getDestinationCells() {

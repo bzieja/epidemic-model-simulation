@@ -52,23 +52,36 @@ public class InfectionManager {
         checkHealing();
     }
 
+    /**
+     * Increase number of days in special state for every not healthy person by one.
+     * If person days in special state is equal to the special state days, then this person health state should be transformed.
+     * Allowed health state transformations in this method:
+     * "NOT_HEALTHY" -> "CONVALESCENT"
+     * "CONVALESCENT" -> "HEALTHY" (can be infected again)
+     */
     private void checkHealing() {
-        model.getWorkers().stream().filter(p -> p.getHealthState().getDurationTimeOfSpecialStateInDays() > 0).forEach(person -> {
-            if (person.getHealthState().getDurationTimeOfSpecialStateInDays() == 1) {
-                decreaseProperty(person.getHealthState());
-                increaseProperty(HealthState.CONVALESCENT);
-                person.setHealthState(HealthState.CONVALESCENT);
-            } else {
-                person.getHealthState().decreaseIllDayByOne();
-            }
-        });
+        model.getWorkers().stream().filter(p -> !HealthState.HEALTHY.equals(p.getHealthState()))
+                .forEach(person -> {
+                    //if end of special state for person
+                    if (person.getInteractionState().getDaysInSpecialState() == person.getHealthState().getDurationTimeOfSpecialStateInDays()) {
+                        //end of immunity period
+                        if (person.getHealthState().equals(HealthState.CONVALESCENT)) {
+                            transitionFromToProperty(person.getHealthState(), HealthState.HEALTHY);
+                            person.setHealthState(HealthState.HEALTHY);
+                        } else {    //end of disease
+                            transitionFromToProperty(person.getHealthState(), HealthState.CONVALESCENT);
+                            person.setHealthState(HealthState.CONVALESCENT);
+                        }
+                    }
+                    person.getInteractionState().increaseNumberOfDaysInSpecialState();
+                });
+
     }
 
     private void putInQuarantaine() {
         model.getWorkers().stream().filter(p -> p.getHealthState().equals(HealthState.SYMPTOMATICALLY_ILL)).forEach(
                 person -> {
-                    decreaseProperty(person.getHealthState());
-                    increaseProperty(HealthState.QUARANTINED);
+                    transitionFromToProperty(person.getHealthState(), HealthState.QUARANTINED);
                     person.setHealthState(HealthState.QUARANTINED);
                 });
     }
@@ -104,15 +117,16 @@ public class InfectionManager {
         model.getWorkers().stream().filter(w -> HealthState.canBeInfected.contains(w.getHealthState())
         && !Building.SPAWN.getCellsWhichBelongsToGivenBuilding().contains(new Cell(w.getX(), w.getY(), false, null)))
                 .forEach(w -> {
-                    double rand = new Random().nextInt(10000) * 0.01;
+                    double rand = new Random().nextInt(100000) * 0.001;
                     if (w.getInteractionState().getProbabilityOfBeingInfected() >= rand) {
-                        if (rand % 3 == 0) {
-                            decreaseProperty(w.getHealthState());
-                            increaseProperty(HealthState.ASYMPTOMATICALLY_ILL);
+
+                        int randIfAsymptomatically = new Random().nextInt(100);
+                        logger.debug("Current rand {}", randIfAsymptomatically);
+                        if (AppConfig.PROBABILITY_OF_BEING_ASYMPTOMATICALLY_INFECTED > randIfAsymptomatically) {
+                            transitionFromToProperty(w.getHealthState(), HealthState.ASYMPTOMATICALLY_ILL);
                             w.setHealthState(HealthState.ASYMPTOMATICALLY_ILL);
                         } else {
-                            decreaseProperty(w.getHealthState());
-                            increaseProperty(HealthState.SYMPTOMATICALLY_ILL);
+                            transitionFromToProperty(w.getHealthState(), HealthState.SYMPTOMATICALLY_ILL);
                             w.setHealthState(HealthState.SYMPTOMATICALLY_ILL);
                         }
                     }
@@ -131,8 +145,7 @@ public class InfectionManager {
 
         persons.stream().limit(AppConfig.NUMBER_OF_INITIALLY_INFECTED_WORKERS)
                 .forEach(w -> {
-                    decreaseProperty(w.getHealthState());
-                    increaseProperty(HealthState.SYMPTOMATICALLY_ILL);
+                    transitionFromToProperty(w.getHealthState(), HealthState.SYMPTOMATICALLY_ILL);
                     w.setHealthState(HealthState.SYMPTOMATICALLY_ILL);
                 });
 
@@ -141,13 +154,13 @@ public class InfectionManager {
     public void writeDataToCSV(String day, LocalTime lt) {
         //healthy, symptomatically ill, aymptomatically ill, numberOfQuarantined, numberOfConvalescent
         logger.info("Logging to file, day: {}, local time: {}", day, lt);
-        try(PrintWriter writer = new PrintWriter(new FileWriter("src/main/resources/results_2.txt", true))) {
+        try(PrintWriter writer = new PrintWriter(new FileWriter("src/main/resources/results.txt", true))) {
             writer.write("day: " + day + " time: " + lt + ";"
                     + numberOfHealthWorkers.getValue() + ";"
                     + numberOfSymptomaticallyIll.getValue() + ";"
                     + numberOfAsymptomaticallyIll.getValue() + ";"
                     + numberOfQuarantined.getValue() + ";"
-                    + numberOfConvalescent.getValue() + ";");
+                    + numberOfConvalescent.getValue() + ";\n");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -192,6 +205,11 @@ public class InfectionManager {
 
     public IntegerProperty numberOfConvalescentProperty() {
         return numberOfConvalescent;
+    }
+
+    private void transitionFromToProperty(HealthState from, HealthState to) {
+        decreaseProperty(from);
+        increaseProperty(to);
     }
 
     private void increaseProperty(HealthState healthState) {

@@ -6,6 +6,7 @@ package pl.bzieja.pandemicmodel.model.person;
 public class InteractionState {
     private int infectedPersonsInRange = 0;
     private double probabilityOfBeingInfected = 0.0;
+    private int daysInSpecialState = 0;
 
     public void setInfectedPersonsInRange(int infectedPersonsInRange) {
         this.infectedPersonsInRange = infectedPersonsInRange;

@@ -14,6 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.AppConfig;
@@ -35,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class Presenter implements Initializable {
 
+    private final Logger logger = LoggerFactory.getLogger(Presenter.class);
     public Canvas canvasID;
     public Button stopButton;
     public Button startButton;
@@ -68,7 +71,7 @@ public class Presenter implements Initializable {
         modelInitializer.createModelFromImage();
         view.setCanvas(canvasID);
         view.generateNewView();
-        System.out.println("End of initialization!");
+        logger.info("End of initialization!");
     }
 
     public synchronized void moveUp(ActionEvent actionEvent) {
@@ -97,12 +100,10 @@ public class Presenter implements Initializable {
 
     public void goWork(ActionEvent actionEvent) {
 
-//        Event workEvent = new WorkEvent();
-//        workEvent.start();
         setMorningOnTheClock();
         model.sendPartOfWorkersToWorkFromHome();
         Disposable disposable = Observable
-                .interval(1, AppConfig.ITERATION_TIME, TimeUnit.MILLISECONDS)
+                .interval(1, AppConfig.ONE_ITERATION_TIME_IN_MS, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext(tick -> {
                     model.moveWorkers();
@@ -122,7 +123,7 @@ public class Presenter implements Initializable {
 
         model.workersToLunch();
         Disposable disposable = Observable
-                .interval(1, AppConfig.ITERATION_TIME, TimeUnit.MILLISECONDS)
+                .interval(1, AppConfig.ONE_ITERATION_TIME_IN_MS, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext(tick -> {
                     model.moveWorkers();
@@ -137,7 +138,7 @@ public class Presenter implements Initializable {
     public void goBackHome(ActionEvent actionEvent) {
         model.setSpawnAsADestinationPointForEachWorker();
         Disposable disposable = Observable
-                .interval(1, AppConfig.ITERATION_TIME, TimeUnit.MILLISECONDS)
+                .interval(1, AppConfig.ONE_ITERATION_TIME_IN_MS, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext(tick -> {
                     model.moveWorkers();
@@ -155,21 +156,21 @@ public class Presenter implements Initializable {
         setMorningOnTheClock();
         addEventListenersToClock();
         //bindCounters();
-        addCounterListeners();
+        addHealthStateCounterListeners();
         infectionManager.infectPatientsZero();
 
 
         Disposable disposable = Observable
-                .interval(1, AppConfig.ITERATION_TIME, TimeUnit.MILLISECONDS)
+                .interval(1, AppConfig.ONE_ITERATION_TIME_IN_MS, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .doOnNext(tick -> {
                     model.moveWorkers();
                     model.workersGoAroundBuildingIfAreAtDestinationPoint();
-                    infectionManager.turnRoutine();
+                    infectionManager.doTickRoutine();
                 })
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(t -> {
-                    view.generateViewForWorkersOnly();
+                    //view.generateViewForWorkersOnly();
                     clockTick();
                 });
 
@@ -177,7 +178,8 @@ public class Presenter implements Initializable {
 
     }
 
-    private void addCounterListeners() {
+    private void addHealthStateCounterListeners() {
+        logger.info("Add counter listeners");
         infectionManager.numberOfHealthWorkersProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> healthyLabelID.setText(String.valueOf(t1))));
         infectionManager.numberOfSymptomaticallyIllProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> symptomaticallyIllLabelID.setText(String.valueOf(t1))));
         infectionManager.numberOfAsymptomaticallyIllProperty().addListener((observableValue, number, t1) -> Platform.runLater(() -> asymptomaticallyIllLabelID.setText(String.valueOf(t1))));
@@ -186,13 +188,13 @@ public class Presenter implements Initializable {
     }
 
 
-    private void bindCounters() {
-        healthyLabelID.textProperty().bind(infectionManager.numberOfHealthWorkersProperty().asString());
-        symptomaticallyIllLabelID.textProperty().bind(infectionManager.numberOfSymptomaticallyIllProperty().asString());
-        asymptomaticallyIllLabelID.textProperty().bind(infectionManager.numberOfAsymptomaticallyIllProperty().asString());
-        quarantinedLabelID.textProperty().bind(infectionManager.numberOfQuarantinedProperty().asString());
-        convalescentLabelID.textProperty().bind(infectionManager.numberOfConvalescentProperty().asString());
-    }
+//    private void bindCounters() {
+//        healthyLabelID.textProperty().bind(infectionManager.numberOfHealthWorkersProperty().asString());
+//        symptomaticallyIllLabelID.textProperty().bind(infectionManager.numberOfSymptomaticallyIllProperty().asString());
+//        asymptomaticallyIllLabelID.textProperty().bind(infectionManager.numberOfAsymptomaticallyIllProperty().asString());
+//        quarantinedLabelID.textProperty().bind(infectionManager.numberOfQuarantinedProperty().asString());
+//        convalescentLabelID.textProperty().bind(infectionManager.numberOfConvalescentProperty().asString());
+//    }
 
     private void addEventListenersToClock() {
 
@@ -202,25 +204,36 @@ public class Presenter implements Initializable {
                 Event event = eventContainer.getHoursToEventsMap().get(newValue);
                 if (event != null) {
                     event.start();
-                    System.out.println(event.getClass() + " time: " + timerLabelID.getText());
+                    logger.info("{} time: {}", event.getClass(), timerLabelID.getText());
+//                    System.out.println(event.getClass() + " time: " + timerLabelID.getText());
                     Platform.runLater(view::generateRawViewMap);
                 }
             }
         });
-}
+    }
 
     public void setMorningOnTheClock() {
-        var lt = LocalTime.of(7,0,0);
+        logger.info("Setting morning in the clock!");
+
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+        var lt = LocalTime.parse(AppConfig.THE_START_OF_THE_DAY,format);
         timerLabelID.setText(lt.format(format));
     }
 
     private void clockTick() {
+        logger.debug("Clock tick!");
+
         String dataAsString = timerLabelID.getText();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-        var lt = LocalTime.parse(dataAsString, format);
-        timerLabelID.setText(lt.plusSeconds(AppConfig.TIME_STEP_IN_SIMULATION_CLOCK).format(format));
-        if (lt.equals(LocalTime.parse("18:00:00", format))) {
+        var localTime = LocalTime.parse(dataAsString, format);
+        timerLabelID.setText(localTime.plusSeconds(AppConfig.TIME_STEP_IN_SIMULATION_WORLD).format(format));
+
+        if (localTime.getMinute() % 30 == 0 && localTime.getSecond() == 0) {   //save every 30m to file
+            infectionManager.writeDataToCSV(dayLabelID.getText(), localTime);
+        }
+
+        if (localTime.equals(LocalTime.parse(AppConfig.THE_END_OF_THE_DAY, format))) { //"18:00:00"
+            infectionManager.doEndOfDayInfectionSummary();
             increaseDayNumber();
             setMorningOnTheClock();
         }
@@ -228,6 +241,7 @@ public class Presenter implements Initializable {
 
     private void increaseDayNumber() {
         var dayNumber = Integer.parseInt(dayLabelID.getText());
+        logger.info("Increase day number. Current day: " + dayNumber + 1);
         dayLabelID.setText(String.valueOf(dayNumber + 1));
     }
 }

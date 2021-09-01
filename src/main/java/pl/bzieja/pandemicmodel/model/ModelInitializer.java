@@ -1,5 +1,10 @@
 package pl.bzieja.pandemicmodel.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.cell.*;
@@ -20,6 +25,7 @@ import java.util.stream.IntStream;
 public class ModelInitializer {
 
     Model model;
+    Logger logger = LoggerFactory.getLogger(ModelInitializer.class);
 
     @Autowired
     public ModelInitializer(Model model) {
@@ -27,8 +33,9 @@ public class ModelInitializer {
     }
 
     public void createModelFromImage() {
-
+        logger.info("Creating model from image!");
         try {
+            logger.info("Start reading image!");
             final BufferedImage bmp = ImageIO.read(new File("src/main/resources/aghMap.bmp"));
             int height = bmp.getHeight();
             int width = bmp.getWidth();
@@ -45,13 +52,21 @@ public class ModelInitializer {
                     }
                 }
             }
+            logger.info("Setting map!");
             model.setMap(map);
+            logger.info("End of reading image from file!");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         createRouteTraces();
         createWorkers();
+
+//        List<Person> peopleFromTxt = readTxtToListOfPersons();
+//        System.out.println("peopleFromTxt.get(0).equals(model.getWorkers().get(0)) = " + peopleFromTxt.get(0).equals(model.getWorkers().get(0)));
+
+//        System.out.println("workers.toString() = " + peopleFromTxt.toString());
+//        model.setWorkers(readTxtToListOfPersons());
         assignCellsToBuildings();
     }
 
@@ -60,6 +75,7 @@ public class ModelInitializer {
     }
 
     private void createWorkers() {
+        logger.info("Start creating workers");
         List<Person> workers = new ArrayList<>();
 
         Building.buildings.stream()
@@ -68,12 +84,23 @@ public class ModelInitializer {
                 .forEach(i -> workers.add(new Person(model.getRandomCellCoordinateByColor(Building.SPAWN.getColor()), building, model.getAllCellsCoordinatesByColor(building.getColor())))));
 
         model.setWorkers(workers);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            writeStringToTxt(objectMapper.writeValueAsString(workers));
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+
+//        List<Person> people = readTxtToListOfPersons();
+//        System.out.println("workers.toString() = " + people.toString());
     }
+
 
     /**
      * Create routes only for this buildings which could be destination place for workers
      */
     private void createRouteTraces() {
+        logger.info("Create route traces");
         Building.buildings.forEach(b -> b.setRouteMap(findTheShortestPathToGivenPlaces(model.getAllCellsCoordinatesByColor(b.getColor()))));
     }
 
@@ -86,6 +113,7 @@ public class ModelInitializer {
      * @return
      */
     private int[][] findTheShortestPathToGivenPlaces(List<Cell> places) {
+        logger.info("Finding the shortest path");
         final int distanceAtTheDestinationPoint = 1;
         final int valueForNonWalkableFields = Integer.MAX_VALUE;
         final int valueForNonVisitedFields = 0;
@@ -182,6 +210,29 @@ public class ModelInitializer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void writeStringToTxt(String text) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("src/main/resources/listOfPersonsAsJSON.txt")); ) {
+//            writer = new BufferedWriter(new FileWriter("src/main/resources/" + LocalDate.now().toString() + ".txt"));
+            writer.write(text);//save the string representation of the board
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Person> readTxtToListOfPersons() {
+        List<Person> persons = null;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            persons = objectMapper.readValue(new File("src/main/resources/listOfPersonsAsJSON.txt"), new TypeReference<List<Person>>(){});
+            persons.forEach(p -> p.setDestinationCells(model.getAllCellsCoordinatesByColor(p.getWorkplace().getColor())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return persons;
+
     }
 
 }

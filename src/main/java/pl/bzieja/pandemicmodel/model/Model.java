@@ -1,5 +1,7 @@
 package pl.bzieja.pandemicmodel.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.cell.Building;
 import pl.bzieja.pandemicmodel.model.cell.Cell;
@@ -14,6 +16,7 @@ import java.util.stream.Stream;
 @Component
 public class Model {
 
+    private final Logger logger = LoggerFactory.getLogger(Model.class);
     private Cell[][] map;
     private List<Person> workers = new ArrayList<>();
 
@@ -43,10 +46,12 @@ public class Model {
     }
 
     public void setWorkers(List<Person> workers) {
+        logger.info("Adding workers to model");
         this.workers.addAll(workers);
     }
 
     public void moveWorkers() {
+        logger.debug("Moving workers");
         workers.stream().filter(w -> w.getRouteMap() != null).forEach(Person::makeMove);
     }
 
@@ -55,6 +60,8 @@ public class Model {
     }
 
     public void sendPartOfWorkersToWorkFromHome() {
+        logger.info("Send part of workers to work method");
+
         long totalNumberOfWorkersWhichShouldGoToWork = workers.stream().filter(w -> HealthState.workable.contains(w.getHealthState())).count();
         long numberOfPeopleWhichGoesToWorkInThisTour = totalNumberOfWorkersWhichShouldGoToWork / AppConfig.NUMBER_OF_GROUPS_GOING_TO_WORK;
 
@@ -93,6 +100,7 @@ public class Model {
     }
 
     public void workersToLunch() {
+        logger.info("Workers to lunch method");
 
         workers.forEach(p -> {
             Building building = new ArrayList<>(Building.gastronomy).get(new Random().nextInt(Building.gastronomy.size()));
@@ -103,6 +111,8 @@ public class Model {
     }
 
     public void setSpawnAsADestinationPointForEachWorker() {
+        logger.info("Set spawn as a destination point for each worker method");
+
         workers.forEach(p -> {
             p.setDestinationCells(getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));
             p.setRouteMap(Building.SPAWN.getRouteMap());
@@ -110,6 +120,7 @@ public class Model {
     }
 
     public void workersGoAroundBuildingIfAreAtDestinationPoint() {
+        logger.debug("Workers go around buildings method");
         workers.stream().filter(Person::isAtTheDestinationPoint).forEach(p -> {
             p.setRouteMap(Building.BUILDING_INTERIOR.getRouteMap());
         });

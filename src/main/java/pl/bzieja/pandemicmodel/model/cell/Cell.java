@@ -1,6 +1,9 @@
 package pl.bzieja.pandemicmodel.model.cell;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.awt.Color;
+import java.util.Map;
 import java.util.Objects;
 
 public class Cell {
@@ -9,6 +12,8 @@ public class Cell {
     protected int x;
     protected int y;
 
+    public Cell() {
+    }
 
     public Cell(int x, int y, boolean walkable, Color defaultColor) {
         this.x = x;
@@ -59,4 +64,5 @@ public class Cell {
                 ", y=" + y +
                 '}';
     }
+
 }

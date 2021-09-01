@@ -15,11 +15,11 @@ public enum HealthState {
     QUARANTINED(AppConfig.TIME_OF_THE_QUARANTINE, new Color(Integer.parseInt("b5622f", 16))),
     CONVALESCENT(AppConfig.TIME_OF_THE_IMMUNITY_AFTER_DISEASE,new Color(Integer.parseInt("07ebe7", 16)));
 
-    private int durationTimeInDays;
+    private int durationTimeOfSpecialStateInDays;
     private final Color color;
 
-    HealthState(int durationTimeInDays, Color color) {
-        this.durationTimeInDays = durationTimeInDays;
+    HealthState(int durationTimeOfSpecialStateInDays, Color color) {
+        this.durationTimeOfSpecialStateInDays = durationTimeOfSpecialStateInDays;
         this.color = color;
     }
 
@@ -31,4 +31,13 @@ public enum HealthState {
     public Color getColor() {
         return color;
     }
+
+//
+//    public void decreaseIllDayByOne(){
+//        this.durationTimeOfSpecialStateInDays--;
+//    }
+//
+//    public int getDurationTimeOfSpecialStateInDays() {
+//        return durationTimeOfSpecialStateInDays;
+//    }
 }

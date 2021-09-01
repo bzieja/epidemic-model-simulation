@@ -1,23 +1,33 @@
 package pl.bzieja.pandemicmodel.model.person;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pl.bzieja.pandemicmodel.model.cell.Building;
 import pl.bzieja.pandemicmodel.model.cell.Cell;
 
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
 
+    @JsonIgnore
     private int [][] routeMap;
     private int previousX;
     private int previousY;
     private int x;
     private int y;
     private final Building workplace;
+    @JsonIgnore
     List<Cell> destinationCells;
     private HealthState healthState;
     private InteractionState interactionState;
     private Building currentDestinationBuilding;
+
+    public Person() {
+        this.workplace = null;
+    }
 
     public Person(int[] coordinates, Building workplace, List<Cell> destinationCells) {
         this.x = coordinates[0];
@@ -200,4 +210,48 @@ public class Person {
     public void setHealthState(HealthState healthState) {
         this.healthState = healthState;
     }
+
+    public List<Cell> getDestinationCells() {
+        return destinationCells;
+    }
+
+    @Override
+    public String toString() {
+        return "routeMap" + " " + Arrays.deepToString(routeMap) +
+                "previousX" + " " + previousX +
+                "previousY" + " " + previousY +
+                "x" + " " + x +
+                "y" + " " + y +
+                "workplace" + " " + workplace +
+                "destinationCells" + " " + destinationCells +
+                "healthState" + " " + healthState +
+                "interactionState" + " " + interactionState +
+                "currentDestinationBuilding" + " " + currentDestinationBuilding;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return previousX == person.previousX && previousY == person.previousY && x == person.x && y == person.y && Arrays.equals(routeMap, person.routeMap) && workplace == person.workplace && Objects.equals(destinationCells, person.destinationCells) && healthState == person.healthState && Objects.equals(interactionState, person.interactionState) && currentDestinationBuilding == person.currentDestinationBuilding;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(previousX, previousY, x, y, workplace, destinationCells, healthState, interactionState, currentDestinationBuilding);
+        result = 31 * result + Arrays.hashCode(routeMap);
+        return result;
+    }
+
+    //    @SuppressWarnings("unchecked")
+//    @JsonProperty("destinationCells")
+//    private void unpackNested(Map<String,Object> destinationCells) {
+//        this.x = (int) destinationCells.get("x");
+//        this.y = (int) destinationCells.get("y");
+//        this.walkable = (boolean) destinationCells.get("walkable");
+//        this.defaultColor = (Color) destinationCells.get("defaultColor");
+//        Map<String,String> owner = (Map<String,String>)destinationCells.get("owner");
+//        this.ownerName = owner.get("name");
+//    }
 }

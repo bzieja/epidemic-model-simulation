@@ -41,7 +41,7 @@ public class EventContainer {
 
         for (int i = 1; i <= AppConfig.NUMBER_OF_GROUPS_GOING_TO_WORK; i++) {
             String minuteOfEventAsString = (i * minuteOfEvent) < 10 ? "0" + (i * minuteOfEvent) : String.valueOf((i * minuteOfEvent));
-            String eventTime = "07:" + minuteOfEventAsString + ":00";
+            String eventTime = AppConfig.START_MORNING_EVENT_HOUR + ":" + minuteOfEventAsString + ":00";
             listOfHoursWhenMorningEventOccurs.add(eventTime);
         }
     }
@@ -51,7 +51,7 @@ public class EventContainer {
 
         for (int i = 1; i <= AppConfig.NUMBER_OF_GROUPS_GOING_TO_WORK; i++) {
             String minuteOfEventAsString = (i * minuteOfEvent) < 10 ? "0" + (i * minuteOfEvent) : String.valueOf((i * minuteOfEvent));
-            String eventTime = "16:" + minuteOfEventAsString + ":00";
+            String eventTime = AppConfig.START_OF_END_DAY_EVENT_HOUR + ":" + minuteOfEventAsString + ":00";
             listOfHoursWhenTheEndOfTheDayEventOccurs.add(eventTime);
         }
     }
@@ -61,7 +61,7 @@ public class EventContainer {
 
         for (int i = 1; i <= AppConfig.NUMBER_OF_GROUPS_GOING_TO_DINNER; i++) {
             String minuteOfEventAsString = (i * minuteOfEvent) < 10 ? "0" + (i * minuteOfEvent) : String.valueOf((i * minuteOfEvent));
-            String eventTime = "12:" + minuteOfEventAsString + ":00";
+            String eventTime = AppConfig.START_OF_DINNER_EVENT_HOUR + ":" + minuteOfEventAsString + ":00";
             listOfHoursWhenDinnerStartEventOccurs.add(eventTime);
         }
     }
@@ -71,7 +71,7 @@ public class EventContainer {
 
         for (int i = 1; i <= AppConfig.NUMBER_OF_GROUPS_GOING_TO_DINNER; i++) {
             String minuteOfEventAsString = (i * minuteOfEvent) < 10 ? "0" + (i * minuteOfEvent) : String.valueOf((i * minuteOfEvent));
-            String eventTime = "14:" + minuteOfEventAsString + ":00";
+            String eventTime = AppConfig.START_OF_END_DINNER_EVENT_HOUR + ":" + minuteOfEventAsString + ":00";
             listOfHoursWhenDinnerEndsEventOccurs.add(eventTime);
         }
     }

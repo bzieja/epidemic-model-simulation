@@ -93,10 +93,18 @@ public class InfectionManager {
 
                     long infectedNeighbours = model.getWorkers().stream()
                             .filter(w1 -> HealthState.canInfect.contains(w1.getHealthState())
-                                    && w.calculateDistanceToAnotherPerson(w1) <= AppConfig.INFECTION_RADIUS).count();
+                                    && isInRange(w, w1)).count();
 
                     w.getInteractionState().setInfectedPersonsInRange((int) infectedNeighbours);
                 });
+    }
+
+    private boolean isInRange(Person person, Person anotherPerson) {
+        if (Building.buildings.contains(new Cell(person.getX(), person.getY(), false, null))) {
+            return person.calculateDistanceToAnotherPerson(anotherPerson) <= AppConfig.INFECTION_RADIUS_IN_THE_BUILDING;
+        } else {
+            return person.calculateDistanceToAnotherPerson(anotherPerson) <= AppConfig.INFECTION_RADIUS_OUTSIDE;
+        }
     }
 
     private void updateProbabilityOfBeingInfectedForWorkers() {
@@ -105,9 +113,13 @@ public class InfectionManager {
                     int infectedPersonsInRange = w.getInteractionState().getInfectedPersonsInRange();
                     if (infectedPersonsInRange == 0) {
                         w.getInteractionState().setProbabilityOfBeingInfected(0);
-                    } else {
+                    } else if (Building.SPAWN.getCellsWhichBelongsToGivenBuilding().contains(new Cell(w.getX(), w.getY(), false, null))) {  //in the building
                         w.getInteractionState().setProbabilityOfBeingInfected(
-                                w.getInteractionState().getProbabilityOfBeingInfected() + infectedPersonsInRange * AppConfig.PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON
+                                w.getInteractionState().getProbabilityOfBeingInfected() + infectedPersonsInRange * AppConfig.PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_IN_THE_BUILDING
+                        );
+                    } else {    //outside
+                        w.getInteractionState().setProbabilityOfBeingInfected(
+                                w.getInteractionState().getProbabilityOfBeingInfected() + infectedPersonsInRange * AppConfig.PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_OUTSIDE
                         );
                     }
                 });

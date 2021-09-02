@@ -18,8 +18,10 @@ public class AppConfig {
     public static final int PERCENTAGE_OF_PEOPLE_GOING_TO_THE_DINNER = 20;
 
     //////////////////////  INFECTION VARIABLES    //////////////////////
-    public static final int INFECTION_RADIUS = 1;
-    public static final double PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON = 0.01;  //0.1
+    public static final int INFECTION_RADIUS_IN_THE_BUILDING = 2;
+    public static final int INFECTION_RADIUS_OUTSIDE = 1;
+    public static final double PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_IN_THE_BUILDING = 0.05;  //0.1
+    public static final double PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_OUTSIDE = 0.01;  //0.1
     public static final int NUMBER_OF_INITIALLY_INFECTED_WORKERS = 10;
     public static final int PROBABILITY_OF_BEING_ASYMPTOMATICALLY_INFECTED = 30;
 

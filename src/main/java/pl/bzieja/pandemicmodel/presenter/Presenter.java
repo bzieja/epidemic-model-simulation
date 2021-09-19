@@ -242,6 +242,9 @@ public class Presenter implements Initializable {
     private void increaseDayNumber() {
         var dayNumber = Integer.parseInt(dayLabelID.getText());
         logger.info("Increase day number. Current day: " + dayNumber + 1);
+        if (dayNumber == 31) {
+            System.exit(0);
+        }
         dayLabelID.setText(String.valueOf(dayNumber + 1));
     }
 }

@@ -2,11 +2,20 @@ package pl.bzieja.pandemicmodel.model;
 
 /**
  * @author Bartłomiej Zieja
+ *
+ * TIME_STEP_IN_SIMULATION_WORLD - one cell move in simulation world takes that amount of time in simulation model
+ *
+ * ONE_ITERATION_TIME_IN_MS - set to:
+ * 400 - for slower simulation and for observing simulation - remember to set SHOULD_RENDER_VIEW to 'true'
+ * 10 - for faster simulation and simulation without view - remember to set SHOULD_RENDER_VIEW to 'false'
+ *
  */
 public class AppConfig {
     public static final int TIME_STEP_IN_SIMULATION_WORLD = 10;
-    public static final int ONE_ITERATION_TIME_IN_MS = 10; //300
-    public static final int DAYS_OF_SIMULATION = 30;
+    public static final int ONE_ITERATION_TIME_IN_MS = 10;
+    public static final boolean SHOULD_RENDER_VIEW = true;
+
+    public static final int DAYS_OF_SIMULATION = 32;
     public static final int TIME_OF_THE_DISEASE = 14;
     public static final int TIME_OF_THE_QUARANTINE = 14;
     public static final int TIME_OF_THE_IMMUNITY_AFTER_DISEASE = 99;
@@ -20,7 +29,7 @@ public class AppConfig {
     //////////////////////  INFECTION VARIABLES    //////////////////////
     public static final int INFECTION_RADIUS_IN_THE_BUILDING = 2;
     public static final int INFECTION_RADIUS_OUTSIDE = 1;
-    public static final double PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_IN_THE_BUILDING = 0.05;  //0.1
+    public static final double PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_IN_THE_BUILDING = 0.05;
     public static final double PROBABILITY_OF_BEING_INFECTED_BY_ONE_PERSON_OUTSIDE = 0.01;  //0.1
     public static final int NUMBER_OF_INITIALLY_INFECTED_WORKERS = 10;
     public static final int PROBABILITY_OF_BEING_ASYMPTOMATICALLY_INFECTED = 30;

@@ -170,7 +170,9 @@ public class Presenter implements Initializable {
                 })
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(t -> {
-                    //view.generateViewForWorkersOnly();
+                    if (AppConfig.SHOULD_RENDER_VIEW) {
+                        view.generateViewForWorkersOnly();
+                    }
                     clockTick();
                 });
 
@@ -228,7 +230,7 @@ public class Presenter implements Initializable {
         var localTime = LocalTime.parse(dataAsString, format);
         timerLabelID.setText(localTime.plusSeconds(AppConfig.TIME_STEP_IN_SIMULATION_WORLD).format(format));
 
-        if (localTime.getMinute() % 30 == 0 && localTime.getSecond() == 0) {   //save every 30m to file
+        if (localTime.getHour() == 7 && localTime.getMinute() == 0 && localTime.getSecond() == 0) {   //save every morning
             infectionManager.writeDataToCSV(dayLabelID.getText(), localTime);
         }
 
@@ -242,7 +244,7 @@ public class Presenter implements Initializable {
     private void increaseDayNumber() {
         var dayNumber = Integer.parseInt(dayLabelID.getText());
         logger.info("Increase day number. Current day: " + dayNumber + 1);
-        if (dayNumber == 31) {
+        if (dayNumber == AppConfig.DAYS_OF_SIMULATION) {
             System.exit(0);
         }
         dayLabelID.setText(String.valueOf(dayNumber + 1));

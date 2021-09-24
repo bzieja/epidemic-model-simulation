@@ -1,7 +1,5 @@
 package pl.bzieja.pandemicmodel.model.person;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import pl.bzieja.pandemicmodel.model.cell.Building;
 import pl.bzieja.pandemicmodel.model.cell.Cell;
 
@@ -9,17 +7,14 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
 
-    @JsonIgnore
     private int [][] routeMap;
     private int previousX;
     private int previousY;
     private int x;
     private int y;
     private final Building workplace;
-    @JsonIgnore
     List<Cell> destinationCells;
     private HealthState healthState;
     private InteractionState interactionState;

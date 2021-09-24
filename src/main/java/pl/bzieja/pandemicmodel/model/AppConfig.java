@@ -12,7 +12,7 @@ package pl.bzieja.pandemicmodel.model;
  */
 public class AppConfig {
     public static final int TIME_STEP_IN_SIMULATION_WORLD = 10;
-    public static final int ONE_ITERATION_TIME_IN_MS = 10;
+    public static final int ONE_ITERATION_TIME_IN_MS = 400;
     public static final boolean SHOULD_RENDER_VIEW = true;
 
     public static final int DAYS_OF_SIMULATION = 32;

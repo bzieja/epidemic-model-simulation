@@ -1,9 +1,6 @@
 package pl.bzieja.pandemicmodel.model.cell;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.awt.Color;
-import java.util.Map;
 import java.util.Objects;
 
 public class Cell {

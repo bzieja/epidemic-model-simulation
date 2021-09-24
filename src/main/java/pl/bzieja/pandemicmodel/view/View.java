@@ -80,6 +80,7 @@ public class View {
         generateNewView();
     }
 
+    //todo: there are some cases when it can cause an Exception, fix it
     public synchronized void zoomOut() {
         if (scaleFactor - 0.75 <= 1) {
             scaleFactor = 1;
@@ -88,7 +89,7 @@ public class View {
         } else if (scaleFactor > 2) {
             scaleFactor -= 0.75;
         }
-        generateNewView();
+
     }
 
     private void clearViewData(GraphicsContext graphicsContext) {

@@ -1,6 +1,5 @@
 package pl.bzieja.pandemicmodel.view.coordinates;
 
-import java.awt.*;
 import java.util.Objects;
 
 /**

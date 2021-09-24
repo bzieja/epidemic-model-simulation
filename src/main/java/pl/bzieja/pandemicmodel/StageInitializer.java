@@ -33,7 +33,7 @@ public class StageInitializer implements ApplicationListener<JavaFXApplication.S
 
             Stage primaryStage = event.getStage();
             //primaryStage.setScene(new Scene(parent, 766, 440));
-            primaryStage.setScene(new Scene(parent, 1130, 634));
+            primaryStage.setScene(new Scene(parent, 1298, 634));
             primaryStage.show();
 
         } catch (IOException e) {

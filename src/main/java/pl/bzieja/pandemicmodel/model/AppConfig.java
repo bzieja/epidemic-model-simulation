@@ -11,9 +11,13 @@ package pl.bzieja.pandemicmodel.model;
  *
  */
 public class AppConfig {
+    //////////////////////  MAIN CONFIG    //////////////////////
     public static final int TIME_STEP_IN_SIMULATION_WORLD = 10;
     public static final int ONE_ITERATION_TIME_IN_MS = 400;
     public static final boolean SHOULD_RENDER_VIEW = true;
+    public static final boolean IS_VACCINATION = false;
+    public static final double VACCINE_EFFECTIVENESS = 80.0;
+    public static final String FILE_WITH_RESULT_NAME = "WARIANT";
 
     public static final int DAYS_OF_SIMULATION = 32;
     public static final int TIME_OF_THE_DISEASE = 14;
@@ -34,7 +38,7 @@ public class AppConfig {
     public static final int NUMBER_OF_INITIALLY_INFECTED_WORKERS = 10;
     public static final int PROBABILITY_OF_BEING_ASYMPTOMATICALLY_INFECTED = 30;
 
-    //////////////////////  HOUR VARIABLES    //////////////////////
+    //////////////////////  HOUR VARIABLES AND EVENTS   //////////////////////
     public static final String THE_START_OF_THE_DAY = "07:00:00";
     public static final String THE_END_OF_THE_DAY = "18:00:00";
 

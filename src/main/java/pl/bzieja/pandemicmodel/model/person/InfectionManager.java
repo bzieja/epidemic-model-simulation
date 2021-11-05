@@ -130,17 +130,25 @@ public class InfectionManager {
         && !Building.SPAWN.getCellsWhichBelongsToGivenBuilding().contains(new Cell(w.getX(), w.getY(), false, null)))
                 .forEach(w -> {
                     double rand = new Random().nextInt(100000) * 0.001;
-                    if (w.getInteractionState().getProbabilityOfBeingInfected() >= rand) {
+                    if (w.getInteractionState().getProbabilityOfBeingInfected() >= rand) {  //GETS INFECTED
+
+                        if (AppConfig.IS_VACCINATION) {
+                            double willTheVaccineProtectRand = new Random().nextInt(100000) * 0.001;
+                            if (AppConfig.VACCINE_EFFECTIVENESS >= willTheVaccineProtectRand) { //vaccine protect
+                                return;
+                            }
+                        }
 
                         int randIfAsymptomatically = new Random().nextInt(100);
                         logger.debug("Current rand {}", randIfAsymptomatically);
-                        if (AppConfig.PROBABILITY_OF_BEING_ASYMPTOMATICALLY_INFECTED > randIfAsymptomatically) {
+                        if (AppConfig.PROBABILITY_OF_BEING_ASYMPTOMATICALLY_INFECTED > randIfAsymptomatically) { //ASYMPTOMATICALLY
                             transitionFromToProperty(w.getHealthState(), HealthState.ASYMPTOMATICALLY_ILL);
                             w.setHealthState(HealthState.ASYMPTOMATICALLY_ILL);
                         } else {
-                            transitionFromToProperty(w.getHealthState(), HealthState.SYMPTOMATICALLY_ILL);
+                            transitionFromToProperty(w.getHealthState(), HealthState.SYMPTOMATICALLY_ILL); //SYMPTOMATICALLY
                             w.setHealthState(HealthState.SYMPTOMATICALLY_ILL);
                         }
+
                     }
 
                 });
@@ -166,7 +174,7 @@ public class InfectionManager {
     public void writeDataToCSV(String day, LocalTime lt) {
         //healthy, symptomatically ill, aymptomatically ill, numberOfQuarantined, numberOfConvalescent
         logger.info("Logging to file, day: {}, local time: {}", day, lt);
-        try(PrintWriter writer = new PrintWriter(new FileWriter("src/main/resources/results.txt", true))) {
+        try(PrintWriter writer = new PrintWriter(new FileWriter("src/main/resources/ " + AppConfig.FILE_WITH_RESULT_NAME + " .txt", true))) {
             writer.write("day: " + day + " time: " + lt + ";"
                     + numberOfHealthWorkers.getValue() + ";"
                     + numberOfSymptomaticallyIll.getValue() + ";"

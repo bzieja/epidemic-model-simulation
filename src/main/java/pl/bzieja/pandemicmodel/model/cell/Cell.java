@@ -62,4 +62,7 @@ public class Cell {
                 '}';
     }
 
+    public void setDefaultColor(Color defaultColor) {
+        this.defaultColor = defaultColor;
+    }
 }

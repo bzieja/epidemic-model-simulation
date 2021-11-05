@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bzieja.pandemicmodel.model.cell.*;
+import pl.bzieja.pandemicmodel.model.person.HealthState;
 import pl.bzieja.pandemicmodel.model.person.Person;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,16 @@ public class ModelInitializer {
         this.model = model;
     }
 
-    public void createModelFromImage() {
+    public void initialize() {
+
+        createModelFromImage();
+        createRouteTraces();
+        createWorkers();
+
+        assignCellsToBuildings();
+    }
+
+    private void createModelFromImage() {
         logger.info("Creating model from image!");
         try {
             logger.info("Start reading image!");
@@ -50,16 +60,17 @@ public class ModelInitializer {
                 }
             }
             logger.info("Setting map!");
-            model.setMap(map);
+            model.setWorldMap(map);
             logger.info("End of reading image from file!");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        createRouteTraces();
-        createWorkers();
-
-        assignCellsToBuildings();
+        //for demonstration purposes
+//        this.model.getCellByCoordinates(100, 120).setDefaultColor(Building.CROWD.getColor());
+//        this.model.getCellByCoordinates(100, 120).setDefaultColor(HealthState.HEALTHY.getColor());
+//        this.model.getCellByCoordinates(100, 125).setDefaultColor(HealthState.SYMPTOMATICALLY_ILL.getColor());
+//        this.model.getCellByCoordinates(100, 130).setDefaultColor(HealthState.ASYMPTOMATICALLY_ILL.getColor());
+//        this.model.getCellByCoordinates(100, 135).setDefaultColor(HealthState.CONVALESCENT.getColor());
     }
 
     private void assignCellsToBuildings() {
@@ -74,7 +85,7 @@ public class ModelInitializer {
                 .filter(building -> building.getNumberOfWorkers() > 0)
                 .forEach(building -> IntStream.range(0, building.getNumberOfWorkers())
                 .forEach(i -> workers.add(new Person(model.getRandomCellCoordinateByColor(Building.SPAWN.getColor()), building, model.getAllCellsCoordinatesByColor(building.getColor())))));
-
+        logger.info("Setting workers to model");
         model.setWorkers(workers);
     }
 
@@ -96,7 +107,7 @@ public class ModelInitializer {
      * @return
      */
     private int[][] findTheShortestPathToGivenPlaces(List<Cell> places) {
-        logger.info("Finding the shortest path");
+        logger.info("Finding the shortest path for " + places);
         final int distanceAtTheDestinationPoint = 1;
         final int valueForNonWalkableFields = Integer.MAX_VALUE;
         final int valueForNonVisitedFields = 0;
@@ -182,7 +193,7 @@ public class ModelInitializer {
                 {
                     builder.append(route[i][j]+ "\t");//append to the output string
                     if(j < route.length - 1)//if this is not the last row element
-                        builder.append(",");//then add comma (if you don't like commas you can use spaces)
+                        builder.append("");//then add comma (if you don't like commas you can use spaces)
                 }
                 builder.append("\n");//append new line at the end of the row
             }

@@ -15,7 +15,7 @@ public class Person {
     private int x;
     private int y;
     private final Building workplace;
-    List<Cell> destinationCells;
+    private List<Cell> destinationCells;
     private HealthState healthState;
     private InteractionState interactionState;
     private Building currentDestinationBuilding;

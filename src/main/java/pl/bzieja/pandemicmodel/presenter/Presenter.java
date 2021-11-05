@@ -68,9 +68,10 @@ public class Presenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         canvasID.setVisible(true);
-        modelInitializer.createModelFromImage();
+        modelInitializer.initialize();
         view.setCanvas(canvasID);
         view.generateNewView();
+        logger.info("Number of generated workers: " + model.getWorkers().size());
         logger.info("End of initialization!");
     }
 

@@ -17,32 +17,32 @@ import java.util.stream.Stream;
 public class Model {
 
     private final Logger logger = LoggerFactory.getLogger(Model.class);
-    private Cell[][] map;
+    private Cell[][] worldMap;
     private List<Person> workers = new ArrayList<>();
 
     public int[] getRandomCellCoordinateByColor(Color color) {
-       List<Cell> list = Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getDefaultColor().equals(color)).collect(Collectors.toList());
+       List<Cell> list = Arrays.stream(worldMap).flatMap(Stream::of).filter(c -> c.getDefaultColor().equals(color)).collect(Collectors.toList());
        return list.get(new Random().nextInt(list.size())).getCoordinates();
     }
 
     public List<Cell> getAllCellsCoordinatesByColor(Color color) {
-        return Arrays.stream(map).flatMap(Stream::of).filter(c -> c.getDefaultColor().equals(color)).collect(Collectors.toList());
+        return Arrays.stream(worldMap).flatMap(Stream::of).filter(c -> c.getDefaultColor().equals(color)).collect(Collectors.toList());
     }
 
     public boolean isCellWalkable(int x, int y) {
-        return map[x][y].isWalkable();
+        return worldMap[x][y].isWalkable();
     }
 
     public int getMapVerticalDimension() {
-        return map.length;
+        return worldMap.length;
     }
 
     public int getMapHorizontalDimension() {
-        return map[0].length;
+        return worldMap[0].length;
     }
 
-    public void setMap(Cell[][] map) {
-        this.map = map;
+    public void setWorldMap(Cell[][] worldMap) {
+        this.worldMap = worldMap;
     }
 
     public void setWorkers(List<Person> workers) {
@@ -56,7 +56,7 @@ public class Model {
     }
 
     public synchronized Cell getCellByCoordinates(int x, int y) {
-        return map[x][y];
+        return worldMap[x][y];
     }
 
     public void sendPartOfWorkersToWorkFromHome() {
@@ -137,7 +137,7 @@ public class Model {
         List<Person> persons = workers.stream().filter(p -> p.getX() == x && p.getY() == y).collect(Collectors.toList());
         long passerbyCounter = persons.size();
 
-        if (map[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
+        if (worldMap[x][y].getDefaultColor().equals(Building.SPAWN.getColor())) {
             return Building.PATH.getColor();
         } else if (passerbyCounter == 1) {
             //health color logic
@@ -158,7 +158,7 @@ public class Model {
         } else if (passerbyCounter > 1) {
             return Building.CROWD.getColor();
         } else {
-            return map[x][y].getDefaultColor();
+            return worldMap[x][y].getDefaultColor();
         }
     }
 

@@ -20,8 +20,8 @@ public class View {
     private double scaleFactor = 1;
     private int xOfTheFirstModelCellToGenerate;
     private int yOfTheFirstModelCellToGenerate;
-    private static final int LEFT_RIGHT_MOVE_FACTOR = 30;
-    private static final int UP_DOWN_MOVE_FACTOR = 12;
+    private static final int LEFT_RIGHT_MOVE_FACTOR = 9;
+    private static final int UP_DOWN_MOVE_FACTOR = 5;
     private static final int AGH_IMAGE_HEIGHT = 300;
     private static final int AGH_IMAGE_WIDTH = 736;
 
@@ -82,14 +82,14 @@ public class View {
 
     //todo: there are some cases when it can cause an Exception, fix it
     public synchronized void zoomOut() {
-        if (scaleFactor - 0.75 <= 1) {
+//        if (scaleFactor - 0.75 <= 1) {
             scaleFactor = 1;
             xOfTheFirstModelCellToGenerate = 0;
             yOfTheFirstModelCellToGenerate = 0;
-        } else if (scaleFactor > 2) {
-            scaleFactor -= 0.75;
-        }
-
+            generateNewView();
+//        } else if (scaleFactor > 2) {
+//            scaleFactor -= 0.75;
+//        }
     }
 
     private void clearViewData(GraphicsContext graphicsContext) {

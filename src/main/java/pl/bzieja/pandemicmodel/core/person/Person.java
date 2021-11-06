@@ -1,7 +1,7 @@
-package pl.bzieja.pandemicmodel.model.person;
+package pl.bzieja.pandemicmodel.core.person;
 
-import pl.bzieja.pandemicmodel.model.cell.Building;
-import pl.bzieja.pandemicmodel.model.cell.Cell;
+import pl.bzieja.pandemicmodel.core.model.Building;
+import pl.bzieja.pandemicmodel.core.cell.Cell;
 
 import java.util.*;
 import java.util.List;

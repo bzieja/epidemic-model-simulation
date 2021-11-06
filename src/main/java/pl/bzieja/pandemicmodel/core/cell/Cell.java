@@ -1,4 +1,4 @@
-package pl.bzieja.pandemicmodel.model.cell;
+package pl.bzieja.pandemicmodel.core.cell;
 
 import java.awt.Color;
 import java.util.Objects;

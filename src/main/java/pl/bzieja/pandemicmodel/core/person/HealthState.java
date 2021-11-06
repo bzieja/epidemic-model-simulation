@@ -1,6 +1,6 @@
-package pl.bzieja.pandemicmodel.model.person;
+package pl.bzieja.pandemicmodel.core.person;
 
-import pl.bzieja.pandemicmodel.model.AppConfig;
+import pl.bzieja.pandemicmodel.core.AppConfig;
 
 import java.awt.*;
 import java.util.EnumSet;

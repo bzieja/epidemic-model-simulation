@@ -1,12 +1,12 @@
-package pl.bzieja.pandemicmodel.model;
+package pl.bzieja.pandemicmodel.core.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import pl.bzieja.pandemicmodel.model.cell.Building;
-import pl.bzieja.pandemicmodel.model.cell.Cell;
-import pl.bzieja.pandemicmodel.model.person.HealthState;
-import pl.bzieja.pandemicmodel.model.person.Person;
+import pl.bzieja.pandemicmodel.core.AppConfig;
+import pl.bzieja.pandemicmodel.core.cell.Cell;
+import pl.bzieja.pandemicmodel.core.person.HealthState;
+import pl.bzieja.pandemicmodel.core.person.Person;
 
 import java.awt.Color;
 import java.util.*;

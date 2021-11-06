@@ -1,4 +1,4 @@
-package pl.bzieja.pandemicmodel.model;
+package pl.bzieja.pandemicmodel.core;
 
 /**
  * @author Bartłomiej Zieja

@@ -1,10 +1,10 @@
-package pl.bzieja.pandemicmodel.model.events;
+package pl.bzieja.pandemicmodel.core.events;
 
-import pl.bzieja.pandemicmodel.model.AppConfig;
-import pl.bzieja.pandemicmodel.model.Model;
-import pl.bzieja.pandemicmodel.model.cell.Building;
-import pl.bzieja.pandemicmodel.model.person.HealthState;
-import pl.bzieja.pandemicmodel.model.person.Person;
+import pl.bzieja.pandemicmodel.core.AppConfig;
+import pl.bzieja.pandemicmodel.core.model.Model;
+import pl.bzieja.pandemicmodel.core.model.Building;
+import pl.bzieja.pandemicmodel.core.person.HealthState;
+import pl.bzieja.pandemicmodel.core.person.Person;
 
 import java.util.ArrayList;
 import java.util.Collections;

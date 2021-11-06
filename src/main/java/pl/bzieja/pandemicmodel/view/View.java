@@ -4,8 +4,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.bzieja.pandemicmodel.model.Model;
-import pl.bzieja.pandemicmodel.model.person.Person;
+import pl.bzieja.pandemicmodel.core.model.Model;
+import pl.bzieja.pandemicmodel.core.person.Person;
 import pl.bzieja.pandemicmodel.view.coordinates.ModelCoordinates;
 import pl.bzieja.pandemicmodel.view.coordinates.RelativeCoordinates;
 

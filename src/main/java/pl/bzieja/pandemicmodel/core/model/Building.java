@@ -1,4 +1,6 @@
-package pl.bzieja.pandemicmodel.model.cell;
+package pl.bzieja.pandemicmodel.core.model;
+
+import pl.bzieja.pandemicmodel.core.cell.Cell;
 
 import java.awt.*;
 import java.util.List;

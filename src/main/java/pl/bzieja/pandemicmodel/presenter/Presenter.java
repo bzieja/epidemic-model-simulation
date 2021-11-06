@@ -18,12 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.bzieja.pandemicmodel.model.AppConfig;
-import pl.bzieja.pandemicmodel.model.Model;
-import pl.bzieja.pandemicmodel.model.ModelInitializer;
-import pl.bzieja.pandemicmodel.model.events.Event;
-import pl.bzieja.pandemicmodel.model.events.EventContainer;
-import pl.bzieja.pandemicmodel.model.person.InfectionManager;
+import pl.bzieja.pandemicmodel.core.AppConfig;
+import pl.bzieja.pandemicmodel.core.model.Model;
+import pl.bzieja.pandemicmodel.core.model.ModelInitializer;
+import pl.bzieja.pandemicmodel.core.events.Event;
+import pl.bzieja.pandemicmodel.core.events.EventContainer;
+import pl.bzieja.pandemicmodel.core.person.InfectionManager;
 import pl.bzieja.pandemicmodel.view.View;
 
 import javafx.scene.input.MouseEvent;

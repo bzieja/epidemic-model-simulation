@@ -2,43 +2,42 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="anchorPaneID" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="1298.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.bzieja.pandemicmodel.presenter.Presenter">
    <children>
-      <Button fx:id="upButton" layoutX="73.0" layoutY="481.0" mnemonicParsing="false" onAction="#moveUp" prefHeight="25.0" prefWidth="52.0" text="Up" />
-      <Button fx:id="leftButton" layoutX="14.0" layoutY="516.0" mnemonicParsing="false" onAction="#moveLeft" prefHeight="25.0" prefWidth="52.0" text="Left" />
-      <Button fx:id="rightButton" layoutX="125.0" layoutY="517.0" mnemonicParsing="false" onAction="#moveRight" prefHeight="25.0" prefWidth="52.0" text="Right" />
-      <Button fx:id="downButton" layoutX="73.0" layoutY="549.0" mnemonicParsing="false" onAction="#moveDown" prefHeight="25.0" prefWidth="52.0" text="Down" />
-      <Button fx:id="zoomInButton" layoutX="209.0" layoutY="492.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="43.0" prefWidth="111.0" text="Zoom in \ +" />
-      <Button fx:id="zoomOutButton" layoutX="209.0" layoutY="544.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="43.0" prefWidth="111.0" text="Zoom out \ -" />
-      <Button fx:id="goWorkButton" layoutX="1069.0" layoutY="534.0" mnemonicParsing="false" onAction="#goWork" prefHeight="31.0" prefWidth="101.0" text="Go Work" />
-      <Button fx:id="stopButton" layoutX="1069.0" layoutY="580.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="31.0" prefWidth="101.0" text="Stop" />
-      <Button fx:id="goLunchButton" layoutX="1183.0" layoutY="532.0" mnemonicParsing="false" onAction="#goLunch" text="Lunch event" />
-      <Button fx:id="goBackHomeButton" layoutX="1183.0" layoutY="580.0" mnemonicParsing="false" onAction="#goBackHome" prefHeight="31.0" prefWidth="101.0" text="Go back home" />
+      <Button fx:id="upButton" layoutX="73.0" layoutY="482.0" mnemonicParsing="false" onAction="#moveUp" prefHeight="31.0" prefWidth="77.0" text="W górę" />
+      <Button fx:id="leftButton" layoutX="14.0" layoutY="516.0" mnemonicParsing="false" onAction="#moveLeft" prefHeight="31.0" prefWidth="94.0" text="W lewo" />
+      <Button fx:id="rightButton" layoutX="125.0" layoutY="517.0" mnemonicParsing="false" onAction="#moveRight" prefHeight="31.0" prefWidth="94.0" text="W prawo" />
+      <Button fx:id="downButton" layoutX="73.0" layoutY="549.0" mnemonicParsing="false" onAction="#moveDown" prefHeight="31.0" prefWidth="77.0" text="W dół" />
+      <Button fx:id="zoomInButton" layoutX="259.0" layoutY="493.0" mnemonicParsing="false" onAction="#zoomIn" prefHeight="43.0" prefWidth="111.0" text="Przybliż" />
+      <Button fx:id="zoomOutButton" layoutX="259.0" layoutY="545.0" mnemonicParsing="false" onAction="#zoomOut" prefHeight="43.0" prefWidth="111.0" text="Oddal" />
       <Canvas fx:id="canvasID" height="450.0" layoutX="14.0" layoutY="14.0" width="1104.0" />
-      <Label fx:id="timerLabelID" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="320.0" layoutY="514.0" prefHeight="43.0" prefWidth="135.0" text="07:00:00">
+      <Label fx:id="timerLabelID" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="370.0" layoutY="515.0" prefHeight="43.0" prefWidth="135.0" text="07:00:00">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
-      <Button fx:id="startSimulationButton" layoutX="516.0" layoutY="481.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="31.0" prefWidth="157.0" text="Start" />
-      <Label fx:id="dayLabelID" alignment="CENTER" layoutX="426.0" layoutY="475.0" prefHeight="43.0" prefWidth="39.0" text="1">
+      <Button fx:id="startSimulationButton" layoutX="557.0" layoutY="493.0" mnemonicParsing="false" onAction="#startSimulation" prefHeight="42.0" prefWidth="135.0" text="Start" />
+      <Label fx:id="dayLabelID" alignment="CENTER" layoutX="476.0" layoutY="476.0" prefHeight="43.0" prefWidth="39.0" text="1">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
-      <Text layoutX="349.0" layoutY="506.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dzień" textAlignment="CENTER" wrappingWidth="76.62600284814835">
+      <Text layoutX="399.0" layoutY="507.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dzień" textAlignment="CENTER" wrappingWidth="76.62600284814835">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Text>
       <Text layoutX="1131.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zdrowi" wrappingWidth="51.99999225139618" />
       <Text layoutX="1131.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chorzy" />
-      <Text layoutX="1131.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chorzy bez." />
+      <Text layoutX="1131.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chorzy bezob." />
       <Text layoutX="1131.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Na kwarantannie" />
       <Text layoutX="1131.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ozdrowieńcy" />
       <Label fx:id="healthyLabelID" layoutX="1249.0" layoutY="14.0" text="0" />
@@ -46,6 +45,19 @@
       <Label fx:id="asymptomaticallyIllLabelID" layoutX="1249.0" layoutY="84.0" text="0" />
       <Label fx:id="quarantinedLabelID" layoutX="1249.0" layoutY="120.0" text="0" />
       <Label fx:id="convalescentLabelID" layoutX="1249.0" layoutY="153.0" text="0" />
-      <Label layoutX="1105.0" layoutY="502.0" prefHeight="21.0" prefWidth="157.0" text="For testing purposes" />
+      <Text layoutX="758.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Współczynnik zarażania wewnątrz budynków:" wrappingWidth="174.99999538064003" />
+      <Text layoutX="758.0" layoutY="553.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Współczynnik zarażania na zewewnątrz budynków:" wrappingWidth="175.00000183098018" />
+      <TextField fx:id="infectionFactorInsideId" layoutX="940.0" layoutY="489.0" prefHeight="31.0" prefWidth="86.0" text="0.05" />
+      <TextField fx:id="infectionFactorOutsideId" layoutX="940.0" layoutY="544.0" prefHeight="31.0" prefWidth="86.0" text="0.01" />
+      <Separator layoutX="382.0" layoutY="476.0" orientation="VERTICAL" prefHeight="145.0" prefWidth="3.0" />
+      <Separator layoutX="521.0" layoutY="478.0" orientation="VERTICAL" prefHeight="145.0" prefWidth="3.0" />
+      <Separator layoutX="723.0" layoutY="478.0" orientation="VERTICAL" prefHeight="145.0" prefWidth="3.0" />
+      <CheckBox fx:id="areMasksId" layoutX="1087.0" layoutY="494.0" mnemonicParsing="false" text="Maseczki" />
+      <CheckBox fx:id="isVaccineId" layoutX="1087.0" layoutY="540.0" mnemonicParsing="false" text="Szczepionka" />
+      <Separator layoutX="1056.0" layoutY="476.0" orientation="VERTICAL" prefHeight="145.0" prefWidth="3.0" />
+      <Button fx:id="stopSimulationButton" layoutX="557.0" layoutY="554.0" mnemonicParsing="false" onAction="#stopSimulation" prefHeight="42.0" prefWidth="135.0" text="Stop" />
+      <Text layoutX="758.0" layoutY="612.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Skuteczność szczepionki:" wrappingWidth="175.00000183098018" />
+      <TextField fx:id="vaccineEffectivenessId" layoutX="940.0" layoutY="591.0" prefHeight="31.0" prefWidth="63.0" text="80.0" />
+      <Text layoutX="1006.0" layoutY="612.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\%" wrappingWidth="19.23341655731201" />
    </children>
 </AnchorPane>

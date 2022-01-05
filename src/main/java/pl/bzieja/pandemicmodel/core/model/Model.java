@@ -79,26 +79,6 @@ public class Model {
                 });
     }
 
-    public void sendPartOfWorkersForDinner() {
-        long totalNumberOfWorkersWhichShouldGoForDinner = workers.stream().filter(w -> HealthState.workable.contains(w.getHealthState())).count() * AppConfig.PERCENTAGE_OF_PEOPLE_GOING_TO_THE_DINNER / 100;
-        long numberOfPeopleWhichGoesForDinnerInThisTour = totalNumberOfWorkersWhichShouldGoForDinner / AppConfig.NUMBER_OF_GROUPS_GOING_TO_DINNER;
-
-        List<Person> persons = workers.stream()
-                .filter(w -> HealthState.workable.contains(w.getHealthState()) && !Building.gastronomy.contains(w.getCurrentDestinationBuilding()))
-                .collect(Collectors.toList());
-        Collections.shuffle(persons);
-
-        persons.stream()
-                .limit(numberOfPeopleWhichGoesForDinnerInThisTour)
-                .forEach(p -> {
-                    Building building = new ArrayList<>(Building.gastronomy).get(new Random().nextInt(Building.gastronomy.size()));
-                    p.setDestinationCells(getAllCellsCoordinatesByColor(building.getColor()));
-                    p.setCurrentDestinationBuilding(building);
-                    p.setRouteMap(building.getRouteMap());
-                });
-
-    }
-
     public void workersToLunch() {
         logger.info("Workers to lunch method");
 
@@ -133,7 +113,6 @@ public class Model {
     public  Color getCellColor(int x, int y){
 
         //check if someone from workers is on that cell
-        //long passerbyCounter = workers.stream().filter(p -> p.getX() == x && p.getY() == y).count();
         List<Person> persons = workers.stream().filter(p -> p.getX() == x && p.getY() == y).collect(Collectors.toList());
         long passerbyCounter = persons.size();
 
@@ -141,7 +120,6 @@ public class Model {
             return Building.PATH.getColor();
         } else if (passerbyCounter == 1) {
             //health color logic
-            //var healthState = workers.stream().filter(p -> p.getX() == x && p.getY() == y).limit(1).collect(Collectors.toList()).get(0).getHealthState();
             HealthState healthState = persons.get(0).getHealthState();
             if (healthState.equals(HealthState.SYMPTOMATICALLY_ILL)) {
                 return HealthState.SYMPTOMATICALLY_ILL.getColor();
@@ -154,7 +132,6 @@ public class Model {
             } else {
                 return HealthState.HEALTHY.getColor();
             }
-            //return Building.WORKER.getColor();
         } else if (passerbyCounter > 1) {
             return Building.CROWD.getColor();
         } else {

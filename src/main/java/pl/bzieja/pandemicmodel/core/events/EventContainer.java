@@ -17,11 +17,11 @@ import java.util.Map;
 public class EventContainer {
 
     Model model;
-    private Map<String, Event> hoursToEventsMap = new HashMap<>();
-    private List<String> listOfHoursWhenMorningEventOccurs = new ArrayList<>();
-    private List<String> listOfHoursWhenDinnerStartEventOccurs = new ArrayList<>();
-    private List<String> listOfHoursWhenDinnerEndsEventOccurs = new ArrayList<>();
-    private List<String> listOfHoursWhenTheEndOfTheDayEventOccurs = new ArrayList<>();
+    private final Map<String, Event> hoursToEventsMap = new HashMap<>();
+    private final List<String> listOfHoursWhenMorningEventOccurs = new ArrayList<>();
+    private final List<String> listOfHoursWhenDinnerStartEventOccurs = new ArrayList<>();
+    private final List<String> listOfHoursWhenDinnerEndsEventOccurs = new ArrayList<>();
+    private final List<String> listOfHoursWhenTheEndOfTheDayEventOccurs = new ArrayList<>();
 
     @Autowired
     public EventContainer(Model model) {

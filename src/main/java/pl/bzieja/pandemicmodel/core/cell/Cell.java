@@ -9,9 +9,6 @@ public class Cell {
     protected int x;
     protected int y;
 
-    public Cell() {
-    }
-
     public Cell(int x, int y, boolean walkable, Color defaultColor) {
         this.x = x;
         this.y = y;
@@ -60,9 +57,5 @@ public class Cell {
                 ", x=" + x +
                 ", y=" + y +
                 '}';
-    }
-
-    public void setDefaultColor(Color defaultColor) {
-        this.defaultColor = defaultColor;
     }
 }

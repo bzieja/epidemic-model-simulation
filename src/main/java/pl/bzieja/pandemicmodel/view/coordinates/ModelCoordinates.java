@@ -27,16 +27,4 @@ public class ModelCoordinates {
         return Objects.hash(x, y);
     }
 
-    public int[] getCoordinates() {
-        return new int[] {x, y};
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
 }

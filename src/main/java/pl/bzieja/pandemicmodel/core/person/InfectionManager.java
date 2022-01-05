@@ -187,40 +187,20 @@ public class InfectionManager {
         }
     }
 
-    public int getNumberOfHealthWorkers() {
-        return numberOfHealthWorkers.get();
-    }
-
     public IntegerProperty numberOfHealthWorkersProperty() {
         return numberOfHealthWorkers;
-    }
-
-    public int getNumberOfSymptomaticallyIll() {
-        return numberOfSymptomaticallyIll.get();
     }
 
     public IntegerProperty numberOfSymptomaticallyIllProperty() {
         return numberOfSymptomaticallyIll;
     }
 
-    public int getNumberOfAsymptomaticallyIll() {
-        return numberOfAsymptomaticallyIll.get();
-    }
-
     public IntegerProperty numberOfAsymptomaticallyIllProperty() {
         return numberOfAsymptomaticallyIll;
     }
 
-    public int getNumberOfQuarantined() {
-        return numberOfQuarantined.get();
-    }
-
     public IntegerProperty numberOfQuarantinedProperty() {
         return numberOfQuarantined;
-    }
-
-    public int getNumberOfConvalescent() {
-        return numberOfConvalescent.get();
     }
 
     public IntegerProperty numberOfConvalescentProperty() {

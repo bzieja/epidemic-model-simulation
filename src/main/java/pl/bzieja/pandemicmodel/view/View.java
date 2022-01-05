@@ -82,14 +82,10 @@ public class View {
 
     //todo: there are some cases when it can cause an Exception, fix it
     public synchronized void zoomOut() {
-//        if (scaleFactor - 0.75 <= 1) {
             scaleFactor = 1;
             xOfTheFirstModelCellToGenerate = 0;
             yOfTheFirstModelCellToGenerate = 0;
             generateNewView();
-//        } else if (scaleFactor > 2) {
-//            scaleFactor -= 0.75;
-//        }
     }
 
     private void clearViewData(GraphicsContext graphicsContext) {
@@ -101,30 +97,7 @@ public class View {
     }
 
     public void generateNewView() {
-        numberOfCellsToGenerateByWidth = (int) Math.round(AGH_IMAGE_WIDTH / scaleFactor);
-        numberOfCellsToGenerateByHeight = (int) Math.round(AGH_IMAGE_HEIGHT / scaleFactor);
-
-        cellWidth = canvasID.getWidth() / numberOfCellsToGenerateByWidth;
-        cellHeight = canvasID.getHeight() / numberOfCellsToGenerateByHeight;
-
-        GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
-        clearViewData(graphicsContext);
-        int xOfCurrentModelCell = xOfTheFirstModelCellToGenerate;
-        int yOfCurrentModelCell = yOfTheFirstModelCellToGenerate;
-        for (int i = 0; i < numberOfCellsToGenerateByHeight; i++, xOfCurrentModelCell++) {
-            yOfCurrentModelCell = yOfTheFirstModelCellToGenerate;
-
-            for (int j = 0; j < numberOfCellsToGenerateByWidth; j++, yOfCurrentModelCell++) {
-
-                Color color = model.getCellByCoordinates(xOfCurrentModelCell, yOfCurrentModelCell).getDefaultColor();
-                graphicsContext.beginPath();
-                graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
-                //canvas coordinates needed
-                graphicsContext.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
-
-                relativePositions.put(new ModelCoordinates(xOfCurrentModelCell, yOfCurrentModelCell), new RelativeCoordinates(j * cellWidth, i * cellHeight));
-            }
-        }
+        generateRawViewMap();
         generateViewForWorkersOnly();
     }
 
@@ -158,26 +131,22 @@ public class View {
     public void generateViewForWorkersOnly() {
         GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
 
-        Predicate<Person> shouldBePersonGenerated = new Predicate<Person>() {
-            @Override
-            public boolean test(Person person) {
-                int x = person.getX();
-                int y = person.getY();
-                int maxX = xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight;
-                int maxY = yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth;
-                if (((x > xOfTheFirstModelCellToGenerate) && (x < maxX))
-                        && ((y > yOfTheFirstModelCellToGenerate) && (y < maxY))) {
-                    return true;
-                } else {
-                    return false;
-                }
+        Predicate<Person> shouldBePersonGenerated = person -> {
+            int x = person.getX();
+            int y = person.getY();
+            int maxX = xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight;
+            int maxY = yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth;
+            if (((x > xOfTheFirstModelCellToGenerate) && (x < maxX))
+                    && ((y > yOfTheFirstModelCellToGenerate) && (y < maxY))) {
+                return true;
+            } else {
+                return false;
             }
         };
 
         model.getWorkers().stream().filter(shouldBePersonGenerated)
                 .forEach((w) -> {
                     var color = model.getCellColor(w.getX(), w.getY());
-                    //var defaultColor = model.getCellByCoordinates(w.getX(), w.getY()).getDefaultColor();
                     graphicsContext.beginPath();
                     graphicsContext.setFill(convertAwtColorToJavaFxColor(color));
                     double[] coords = relativePositions.getOrDefault(new ModelCoordinates(w.getX(), w.getY()), new RelativeCoordinates(0, 0)).getCoordinates();
@@ -189,19 +158,16 @@ public class View {
     private void clearPreviousPositionsOfWorkers() {
         GraphicsContext graphicsContext = canvasID.getGraphicsContext2D();
 
-        Predicate<Person> shouldBeLastPersonCoordinatesRedraw = new Predicate<Person>() {
-            @Override
-            public boolean test(Person person) {
-                int x = person.getPreviousX();
-                int y = person.getPreviousY();
-                int maxX = xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight;
-                int maxY = yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth;
-                if (((x > xOfTheFirstModelCellToGenerate) && (x < maxX))
-                        && ((y > yOfTheFirstModelCellToGenerate) && (y < maxY))) {
-                    return true;
-                } else {
-                    return false;
-                }
+        Predicate<Person> shouldBeLastPersonCoordinatesRedraw = person -> {
+            int x = person.getPreviousX();
+            int y = person.getPreviousY();
+            int maxX = xOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByHeight;
+            int maxY = yOfTheFirstModelCellToGenerate + numberOfCellsToGenerateByWidth;
+            if (((x > xOfTheFirstModelCellToGenerate) && (x < maxX))
+                    && ((y > yOfTheFirstModelCellToGenerate) && (y < maxY))) {
+                return true;
+            } else {
+                return false;
             }
         };
 

@@ -36,8 +36,7 @@ public class TheEndOfTheDayEvent extends Event {
         persons.stream()
                 .limit(numberOfPeopleWhichGoesBackFromWorkInThisTour)
                 .forEach(p -> {
-                    //p.setDestinationCells(model.getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));  //???
-                    p.setDestinationCells(model.getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));  //???
+                    p.setDestinationCells(model.getAllCellsCoordinatesByColor(Building.SPAWN.getColor()));
                     p.setCurrentDestinationBuilding(Building.SPAWN);
                     p.setRouteMap(Building.SPAWN.getRouteMap());
                 });

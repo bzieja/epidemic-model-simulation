@@ -240,14 +240,4 @@ public class Person {
         return result;
     }
 
-    //    @SuppressWarnings("unchecked")
-//    @JsonProperty("destinationCells")
-//    private void unpackNested(Map<String,Object> destinationCells) {
-//        this.x = (int) destinationCells.get("x");
-//        this.y = (int) destinationCells.get("y");
-//        this.walkable = (boolean) destinationCells.get("walkable");
-//        this.defaultColor = (Color) destinationCells.get("defaultColor");
-//        Map<String,String> owner = (Map<String,String>)destinationCells.get("owner");
-//        this.ownerName = owner.get("name");
-//    }
 }

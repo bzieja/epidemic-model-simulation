@@ -15,7 +15,7 @@ public enum HealthState {
     QUARANTINED(AppConfig.TIME_OF_THE_QUARANTINE, new Color(Integer.parseInt("b5622f", 16))),
     CONVALESCENT(AppConfig.TIME_OF_THE_IMMUNITY_AFTER_DISEASE,new Color(Integer.parseInt("07ebe7", 16)));
 
-    private int durationTimeOfSpecialStateInDays;
+    private final int durationTimeOfSpecialStateInDays;
     private final Color color;
 
     HealthState(int durationTimeOfSpecialStateInDays, Color color) {

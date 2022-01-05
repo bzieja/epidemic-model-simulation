@@ -18,7 +18,6 @@ public class JavaFXApplication extends Application {
         this.applicationContext = new SpringApplicationBuilder()
                 .sources(PandemicModelApplication.class)
                 .run(args);
-        //applicationContext = new SpringApplicationBuilder(PandemicModelApplication.class).run();
     }
 
     @Override

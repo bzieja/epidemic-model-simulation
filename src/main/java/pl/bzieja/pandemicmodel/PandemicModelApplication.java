@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PandemicModelApplication {
 
     public static void main(String[] args) {
-        //SpringApplication.run(PandemicModelApplication.class, args);
         Application.launch(JavaFXApplication.class, args);
     }
 

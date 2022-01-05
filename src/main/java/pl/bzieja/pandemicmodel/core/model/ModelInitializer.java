@@ -34,7 +34,6 @@ public class ModelInitializer {
         createModelFromImage();
         createRouteTraces();
         createWorkers();
-
         assignCellsToBuildings();
     }
 
@@ -64,12 +63,6 @@ public class ModelInitializer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //for demonstration purposes
-//        this.model.getCellByCoordinates(100, 120).setDefaultColor(Building.CROWD.getColor());
-//        this.model.getCellByCoordinates(100, 120).setDefaultColor(HealthState.HEALTHY.getColor());
-//        this.model.getCellByCoordinates(100, 125).setDefaultColor(HealthState.SYMPTOMATICALLY_ILL.getColor());
-//        this.model.getCellByCoordinates(100, 130).setDefaultColor(HealthState.ASYMPTOMATICALLY_ILL.getColor());
-//        this.model.getCellByCoordinates(100, 135).setDefaultColor(HealthState.CONVALESCENT.getColor());
     }
 
     private void assignCellsToBuildings() {
@@ -182,7 +175,10 @@ public class ModelInitializer {
         return route;
     }
 
-
+    /**
+     * Method for debugging purposes.
+     * @param route
+     */
     private void saveMatrixToTxt(int[][] route) {
         try {
             StringBuilder builder = new StringBuilder();
@@ -204,6 +200,4 @@ public class ModelInitializer {
             e.printStackTrace();
         }
     }
-
-
 }

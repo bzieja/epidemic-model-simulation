@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.bzieja</groupId>
-    <artifactId>pandemic-model</artifactId>
+    <artifactId>epidemic-model</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>pandemic-model</name>
-    <description>Java FX for pandemic simulation model</description>
+    <name>epidemic-model</name>
+    <description>Java FX for epidemic simulation model</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -91,6 +91,17 @@
 <!--            <version>30.1.1-jre</version>-->
 <!--        </dependency>-->
 
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>16</version>
+        </dependency>
 
     </dependencies>
 

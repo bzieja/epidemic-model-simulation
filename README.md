@@ -101,13 +101,23 @@ The more infected neighbors a cell has, the higher its probability of being infe
 Sample screenshots showing the model during the simulation.
 
 <p align="center" style="margin-bottom: 0px !important;">
- <img width="1500" src="./src/main/resources/images/img_6.png" alt="GUI" align="center"> 
-  <h5 align="center" style="margin-top: -40px; font-style: italic">Image 5. The whole map during the simulation.</h5>
+ <img width="1575" src="./src/main/resources/gifs/morningEvent_1.gif" alt="morningEvent_1" align="center"> 
+  <h5 align="center" style="margin-top: -20px; font-style: italic">Gif 1. The start of the simulation and the appearance of the first workers at the edge of the map</h5>
 </p>
 
 <p align="center" style="margin-bottom: 0px !important;">
- <img width="1382" src="./src/main/resources/images/img_7.png" alt="GUI" align="center"> 
-  <h5 align="center" style="margin-top: -40px; font-style: italic">Image 6. Buildings B1-B4 during the simulation.</h5>
+ <img width="1575" src="./src/main/resources/gifs/morningEvent_2.gif" alt="morningEvent_2" align="center"> 
+  <h5 align="center" style="margin-top: -20px; font-style: italic">Gif 2. Movement of employees to buildings that are their place of work</h5>
+</p>
+
+<p align="center" style="margin-bottom: 0px !important;">
+ <img width="483" src="./src/main/resources/gifs/simulation_1.gif" alt="simulation_1" align="center"> 
+  <h5 align="center" style="margin-top: -20px; font-style: italic">Gif 3. Model during simulation in the middle of the day</h5>
+</p>
+
+<p align="center" style="margin-bottom: 0px !important;">
+ <img width="483" src="./src/main/resources/gifs/simulation_2.gif" alt="simulation_2" align="center"> 
+  <h5 align="center" style="margin-top: -20px; font-style: italic">Gif 4. Random movements of workers simulating their work inside buildings</h5>
 </p>
 
 ### Sample simulation results
@@ -116,5 +126,5 @@ On the basis of the simulation results it is possible to obtain graphs character
 
 <p align="center" style="margin-bottom: 0px !important;">
  <img width="967" src="./src/main/resources/images/img_8.png" alt="GUI" align="center"> 
-  <h5 align="center" style="margin-top: -40px; font-style: italic">Image 7. The dynamics of the epidemic in a sample simulation scenario.</h5>
+  <h5 align="center" style="margin-top: -40px; font-style: italic">Image 5. The dynamics of the epidemic in a sample simulation scenario.</h5>
 </p>
